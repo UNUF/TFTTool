@@ -1,0 +1,1 @@
+python -m nuitka TFTTool.py --standalone --onefile --follow-imports --follow-stdlib --output-dir "D:\TFTTool Exec" --windows-company-name Zedia --windows-product-version 4096 --python-flag=no_site,-OO
