@@ -19,10 +19,12 @@ class Checksum:
         l[0] ^= xorIn
         for word in l:
             for i in range(32):
-                reg = (reg << 1) + ((word >> (32 - 1)) & 1)
+                reg <<= 1
+                if word >= (1 << 31):
+                    reg += 1
                 word <<= 1
-                if reg & (1 << 32):
+                if reg >= (1 << 32):
                     reg ^= poly
-        reg &= ((1 << 32) - 1)
+        reg &= 0xffffffff#((1 << 32) - 1)
         reg ^= xorOut
         return reg
