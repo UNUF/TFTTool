@@ -23,6 +23,7 @@ class Checksum:
                 if word >= (1 << 31):
                     reg += 1
                 word <<= 1
+                word &= 0xffffffff
                 if reg >= (1 << 32):
                     reg ^= poly
         reg &= 0xffffffff#((1 << 32) - 1)
