@@ -624,6 +624,7 @@ class TFTFile:
             pass
 
         # Set vendor, model CRC and XOR key to the new model
+        self.model = model
         self.header1.content["editorVendor"] = ord(model[0])
         self.header1.content["modelCRC"] = self._modelCRCs[self._models.index(model)]
         self.header2.xor = self._modelXORs[model]
@@ -637,11 +638,11 @@ class TFTFile:
 
         # Update file checksum with the correct checksum algorithm
         crcAlgo = self._getVal("fileCRCAlgorithm")
-        if crcAlgo not in (0, 1, 3):
+        if crcAlgo not in (0, 1, 2, 3):
             raise Exception("Unknown file CRC ({}).".format(crcAlgo))
         # Remove old checksum
         self.raw = self.raw[:-4]
-        if crcAlgo == 3:
+        if crcAlgo >= 2:
             # word based
             words = len(self.raw) // 4
             missingBytes = len(self.raw) - 4 * words
