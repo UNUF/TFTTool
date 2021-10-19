@@ -6,7 +6,7 @@ TFTTool is a python script that reads the TFT file and converts it into a human 
 
 ## Requirements
 
-Python 3.7 or higher
+Python 3.9 or higher
 
 ## Usage
 
