@@ -731,12 +731,10 @@ if __name__ == '__main__':
 
         if not outputPath or outputPath == tftPath:
             outputPath = tftPath.with_stem(tftPath.stem + "_" + args.target)
-        elif outputPath.is_file():
-            outputPath = outputPath.with_suffix(".tft")
         elif outputPath.is_dir():
             outputPath /= tftPath.with_stem(tftPath.stem + "_" + args.target).name
         else:
-            parser.error("Dunno what to do with that output path...")
+            outputPath = outputPath.with_suffix(".tft")
         with open(outputPath, "wb") as f:
             f.write(tft.raw)
 
