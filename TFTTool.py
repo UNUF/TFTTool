@@ -399,7 +399,7 @@ class TFTFile:
          "NX1060P070_011",
          "NX1060P101_011",
     ]
-    _modelCRCs = [Checksum().CRC(data=m.encode("ansi")) for m in _models]
+    _modelCRCs = [Checksum().CRC(data=m.encode("ascii")) for m in _models]
 
     _modelXORs = {
          "NX4024K032_011": 0x45c41179,
