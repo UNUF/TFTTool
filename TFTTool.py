@@ -1108,8 +1108,8 @@ class TFTFile:
             "editor_version_main":                  {"struct": "B", "val": None},
             "editor_version_sub":                   {"struct": "B", "val": None},
             "editor_vendor":                        {"struct": "B", "val": None},
-            "unknown_old_gujian_address":           {"struct": "I", "val": None},
-            "unknwon_old_gujian_size":              {"struct": "I", "val": None},
+            "unknown_old_firmware_address":         {"struct": "I", "val": None},
+            "unknwon_old_firmware_size":            {"struct": "I", "val": None},
             "old_lcd_resolution_width":             {"struct": "H", "val": None}, # always largest resolution
             "old_lcd_resolution_height":            {"struct": "H", "val": None}, # always smallest resolution
             "lcd_resolution_x":                     {"struct": "H", "val": None}, # x-resolution in current orientation (cf ui_orientation)
