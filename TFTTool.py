@@ -37,42 +37,398 @@ class Usercode:
             "system:": 0x04,
             "":        0x03, #actual value
         }
-        _listOperatorsEncode = {
-            "com_stop": 0x081E,
-            "com_star": 0x0820,
-            "code_c":   0x0806,
-            "click":    0x0800,
-            "cir":      0x0404,
-            "cirs":     0x0414,
-            "cjmp":     0x0400,
-            "cls":      0x0406,
-            "covx":     0x041B,
-            "crcrest":  0x0817,
-            "crcputs":  0x0815,
-            "doevents": 0x0821,
-            "draw":     0x041A,
-            "fill":     0x040D,
-            "get":      0x0407,
-            "line":     0x040C,
-            "page":     0x040B,
-            "printh":   0x080B,
-            "prints":   0x080F,
-            "pic":      0x0401,
-            "picq":     0x040F,
-            "ref_stop": 0x081D,
-            "ref_star": 0x081F,
-            "randset":  0x0816,
-            "ref":      0x0403,
-            "sendme":   0x0809,
-            "strlen":   0x080C,
-            "spstr":    0x0803,
-            "touch_j":  0x0814,
-            "tsw":      0x0409,
-            "vis":      0x0405,
-            "jmp":      0x2054,
-            # Components (prefixed with "c_")
-            # "c_text":    0x081c,
 
+        # Most encodings differ for each model series.
+        _listOperatorsEncode = {
+            # T0/Basic
+            0: {
+                "jmp":      0x2054,
+                "cjmp":     0x400,
+                "pic":      0x401,
+                "cle":      0x402,
+                "ref":      0x403,
+                "cir":      0x404,
+                "vis":      0x405,
+                "cls":      0x406,
+                "get":      0x407,
+                "cov":      0x408,
+                "tsw":      0x409,
+                "xpic":     0x40a,
+                "page":     0x40b,
+                "line":     0x40c,
+                "fill":     0x40d,
+                "pa_q":     0x40e,
+                "picq":     0x40f,
+                "fstr":     0x410,
+                "nstr":     0x411,
+                "xstr":     0x412,
+                "zstr":     0x413,
+                "cirs":     0x414,
+                "addt":     0x415,
+                "init":     0x416,
+                "rfpt":     0x417,
+                "wfpt":     0x418,
+                "rest":     0x419,
+                "draw":     0x41a,
+                "covx":     0x41b,
+                "click":    0x800,
+                "comok":    0x801,
+                "btlen":    0x802,
+                "spstr":    0x803,
+                "print":    0x804,
+                "ucopy":    0x805,
+                "code_c":   0x806,
+                "draw3d":   0x807,
+                "qrcode":   0x808,
+                "sendme":   0x809,
+                "draw_h":   0x80a,
+                "printh":   0x80b,
+                "strlen":   0x80c,
+                "showqq":   0x80d,
+                "substr":   0x80e,
+                "prints":   0x80f,
+                "pa_txt":   0x810,
+                "udelete":  0x811,
+                "strsize":  0x812,
+                "crcputh":  0x813,
+                "touch_j":  0x814,
+                "crcputs":  0x815,
+                "randset":  0x816,
+                "crcrest":  0x817,
+                "crcputu":  0x818,
+                "lcd_dev":  0x819,
+                "lhmi_cle": 0x81a,
+                "whmi_cle": 0x81b,
+                "setbrush": 0x81c,
+                "ref_stop": 0x81d,
+                "com_stop": 0x81e,
+                "ref_star": 0x81f,
+                "com_star": 0x820,
+                "doevents": 0x821,
+                "timerset": 0x822,
+                "getpassw": 0x823,
+                "lcd_refx": 0x824,
+                "setbaudz": 0x825,
+            },
+            # K0/Enhanced
+            1: {
+                "jmp":      0x2054,
+                "cjmp":     0x400,
+                "pic":      0x401,
+                "cle":      0x402,
+                "ref":      0x403,
+                "cir":      0x404,
+                "vis":      0x405,
+                "cls":      0x406,
+                "get":      0x407,
+                "cov":      0x408,
+                "tsw":      0x409,
+                "xpic":     0x40a,
+                "page":     0x40b,
+                "line":     0x40c,
+                "fill":     0x40d,
+                "repo":     0x40e,
+                "wepo":     0x40f,
+                "pa_q":     0x410,
+                "picq":     0x411,
+                "fstr":     0x412,
+                "nstr":     0x413,
+                "xstr":     0x414,
+                "zstr":     0x415,
+                "cirs":     0x416,
+                "addt":     0x417,
+                "init":     0x418,
+                "rept":     0x419,
+                "wept":     0x41a,
+                "rfpt":     0x41b,
+                "wfpt":     0x41c,
+                "rest":     0x41d,
+                "draw":     0x41e,
+                "covx":     0x41f,
+                "click":    0x800,
+                "comok":    0x801,
+                "btlen":    0x802,
+                "spstr":    0x803,
+                "print":    0x804,
+                "ucopy":    0x805,
+                "code_c":   0x806,
+                "draw3d":   0x807,
+                "qrcode":   0x808,
+                "sendme":   0x809,
+                "draw_h":   0x80a,
+                "printh":   0x80b,
+                "strlen":   0x80c,
+                "cfgpio":   0x80d,
+                "showqq":   0x80e,
+                "substr":   0x80f,
+                "prints":   0x810,
+                "pa_txt":   0x811,
+                "udelete":  0x812,
+                "strsize":  0x813,
+                "crcputh":  0x814,
+                "touch_j":  0x815,
+                "crcputs":  0x816,
+                "randset":  0x817,
+                "crcrest":  0x818,
+                "crcputu":  0x819,
+                "lcd_dev":  0x81a,
+                "lhmi_cle": 0x81b,
+                "whmi_cle": 0x81c,
+                "setbrush": 0x81d,
+                "ref_stop": 0x81e,
+                "com_stop": 0x81f,
+                "ref_star": 0x820,
+                "com_star": 0x821,
+                "doevents": 0x822,
+                "timerset": 0x823,
+                "getpassw": 0x824,
+                "lcd_refx": 0x825,
+                "setbaudz": 0x826,
+            },
+            # X3/-
+            2: {
+                "jmp":      0x2054,
+                "cjmp":     0x400,
+                "pic":      0x401,
+                "cle":      0x402,
+                "ref":      0x403,
+                "cir":      0x404,
+                "vis":      0x405,
+                "cls":      0x406,
+                "get":      0x407,
+                "cov":      0x408,
+                "tsw":      0x409,
+                "xpic":     0x40a,
+                "page":     0x40b,
+                "line":     0x40c,
+                "move":     0x40d,
+                "fill":     0x40e,
+                "repo":     0x40f,
+                "wepo":     0x410,
+                "pa_q":     0x411,
+                "picq":     0x412,
+                "nstr":     0x413,
+                "xstr":     0x414,
+                "zstr":     0x415,
+                "cirs":     0x416,
+                "addt":     0x417,
+                "init":     0x418,
+                "rept":     0x419,
+                "wept":     0x41a,
+                "rfpt":     0x41b,
+                "wfpt":     0x41c,
+                "rest":     0x41d,
+                "draw":     0x41e,
+                "covx":     0x41f,
+                "play":     0x420,
+                "click":    0x800,
+                "comok":    0x801,
+                "btlen":    0x802,
+                "redir":    0x803,
+                "spstr":    0x804,
+                "print":    0x805,
+                "ucopy":    0x806,
+                "code_c":   0x807,
+                "draw3d":   0x808,
+                "qrcode":   0x809,
+                "rdfile":   0x80a,
+                "refile":   0x80b,
+                "twfile":   0x80c,
+                "sendme":   0x80d,
+                "draw_h":   0x80e,
+                "printh":   0x80f,
+                "strlen":   0x810,
+                "cfgpio":   0x811,
+                "showqq":   0x812,
+                "deldir":   0x813,
+                "newdir":   0x814,
+                "substr":   0x815,
+                "prints":   0x816,
+                "pa_txt":   0x817,
+                "delfile":  0x818,
+                "newfile":  0x819,
+                "udelete":  0x81a,
+                "strsize":  0x81b,
+                "crcputh":  0x81c,
+                "touch_j":  0x81d,
+                "finddir":  0x81e,
+                "crcputs":  0x81f,
+                "randset":  0x820,
+                "crcrest":  0x821,
+                "crcputu":  0x822,
+                "lcd_dev":  0x823,
+                "lhmi_cle": 0x824,
+                "whmi_cle": 0x825,
+                "findfile": 0x826,
+                "setbrush": 0x827,
+                "ref_stop": 0x828,
+                "com_stop": 0x829,
+                "ref_star": 0x82a,
+                "com_star": 0x82b,
+                "setlayer": 0x82c,
+                "doevents": 0x82d,
+                "timerset": 0x82e,
+                "getpassw": 0x82f,
+                "lcd_refx": 0x830,
+                "setbaudz": 0x831,
+            },
+           # X5/Intelligent
+           3: {
+               "jmp":       0x2054,
+                "cjmp":     0x400,
+                "pic":      0x401,
+                "cle":      0x402,
+                "ref":      0x403,
+                "cir":      0x404,
+                "vis":      0x405,
+                "cls":      0x406,
+                "get":      0x407,
+                "cov":      0x408,
+                "tsw":      0x409,
+                "xpic":     0x40a,
+                "page":     0x40b,
+                "line":     0x40c,
+                "move":     0x40d,
+                "fill":     0x40e,
+                "repo":     0x40f,
+                "wepo":     0x410,
+                "pa_q":     0x411,
+                "picq":     0x412,
+                "nstr":     0x413,
+                "xstr":     0x414,
+                "zstr":     0x415,
+                "cirs":     0x416,
+                "addt":     0x417,
+                "init":     0x418,
+                "rept":     0x419,
+                "wept":     0x41a,
+                "rfpt":     0x41b,
+                "wfpt":     0x41c,
+                "rest":     0x41d,
+                "draw":     0x41e,
+                "covx":     0x41f,
+                "play":     0x420,
+                "click":    0x800,
+                "comok":    0x801,
+                "btlen":    0x802,
+                "redir":    0x803,
+                "spstr":    0x804,
+                "print":    0x805,
+                "ucopy":    0x806,
+                "code_c":   0x807,
+                "draw3d":   0x808,
+                "qrcode":   0x809,
+                "rdfile":   0x80a,
+                "refile":   0x80b,
+                "twfile":   0x80c,
+                "sendme":   0x80d,
+                "draw_h":   0x80e,
+                "printh":   0x80f,
+                "strlen":   0x810,
+                "cfgpio":   0x811,
+                "showqq":   0x812,
+                "deldir":   0x813,
+                "newdir":   0x814,
+                "substr":   0x815,
+                "prints":   0x816,
+                "pa_txt":   0x817,
+                "delfile":  0x818,
+                "newfile":  0x819,
+                "udelete":  0x81a,
+                "strsize":  0x81b,
+                "crcputh":  0x81c,
+                "touch_j":  0x81d,
+                "finddir":  0x81e,
+                "crcputs":  0x81f,
+                "randset":  0x820,
+                "crcrest":  0x821,
+                "crcputu":  0x822,
+                "lcd_dev":  0x823,
+                "lhmi_cle": 0x824,
+                "whmi_cle": 0x825,
+                "findfile": 0x826,
+                "setbrush": 0x827,
+                "ref_stop": 0x828,
+                "com_stop": 0x829,
+                "ref_star": 0x82a,
+                "com_star": 0x82b,
+                "setlayer": 0x82c,
+                "doevents": 0x82d,
+                "timerset": 0x82e,
+                "getpassw": 0x82f,
+                "lcd_refx": 0x830,
+                "setbaudz": 0x831,
+           },
+            # T1/Discovery
+            100: {
+                "jmp":      0x2054,
+                "cjmp":     0x400,
+                "pic":      0x401,
+                "cle":      0x402,
+                "ref":      0x403,
+                "cir":      0x404,
+                "vis":      0x405,
+                "cls":      0x406,
+                "get":      0x407,
+                "cov":      0x408,
+                "tsw":      0x409,
+                "xpic":     0x40a,
+                "page":     0x40b,
+                "line":     0x40c,
+                "fill":     0x40d,
+                "pa_q":     0x410,
+                "picq":     0x411,
+                "fstr":     0x412,
+                "nstr":     0x413,
+                "xstr":     0x414,
+                "zstr":     0x415,
+                "cirs":     0x416,
+                "addt":     0x417,
+                "init":     0x418,
+                "rfpt":     0x419,
+                "wfpt":     0x41a,
+                "rest":     0x41b,
+                "draw":     0x41d,
+                "covx":     0x41e,
+                "click":    0x800,
+                "comok":    0x801,
+                "btlen":    0x802,
+                "spstr":    0x803,
+                "print":    0x804,
+                "ucopy":    0x805,
+                "code_c":   0x806,
+                "draw3d":   0x807,
+                "qrcode":   0x808,
+                "sendme":   0x809,
+                "draw_h":   0x80a,
+                "printh":   0x80b,
+                "strlen":   0x80c,
+                "showqq":   0x80d,
+                "substr":   0x80e,
+                "prints":   0x80f,
+                "pa_txt":   0x810,
+                "udelete":  0x811,
+                "strsize":  0x812,
+                "crcputh":  0x813,
+                "touch_j":  0x814,
+                "crcputs":  0x815,
+                "randset":  0x816,
+                "crcrest":  0x817,
+                "crcputu":  0x818,
+                "lcd_dev":  0x819,
+                "lhmi_cle": 0x81a,
+                "whmi_cle": 0x81b,
+                "setbrush": 0x81c,
+                "ref_stop": 0x81d,
+                "com_stop": 0x81e,
+                "ref_star": 0x81f,
+                "com_star": 0x820,
+                "doevents": 0x822,
+                "timerset": 0x823,
+                "getpassw": 0x824,
+                "lcd_refx": 0x825,
+                "setbaudz": 0x826,
+            },
         }
         _unaryOperators  = ["++", "--"]
         _binaryOperators = ["+", "-", "*", "/", "<<", ">>", "&", "|"]
@@ -80,46 +436,315 @@ class Usercode:
         _binaryOperators.append("=")
 
         _systemVariablesEncode = {
-            "dp":     0x00000004,
-            "WHITE":  0x00000008,
-            "RED":    0x00000104,
-            "BLACK":  0x00000108,
-            "thc":    0x00000204,
-            "GREEN":  0x00000208,
-            "dim":    0x00000304,
-            "BROWN":  0x00000308,
-            "wup":    0x00000404,
-            "thdra":  0x00000408,
-            "tch0":   0x00000604,
-            "bkcmd":  0x00000608,
-            "usize":  0x00000708,
-            "tch1":   0x00000804,
-            "sleep":  0x00000808,
-            "tch2":   0x00000904,
-            "tch3":   0x00000A04,
-            "bauds":  0x00000A08,
-            "BLUE":   0x00000B04,
-            "delay":  0x00000B08,
-            "GRAY":   0x00000C04,
-            "YELLOW": 0x00000C08,
-            "recmod": 0x00000D08,
-            "baud":   0x00000E04,
-            "thsp":   0x00000F04,
-            "crcval": 0x00000F08,
-            "ussp":   0x00001004,
-            "sendxy": 0x00001008,
-            "thup":   0x00001104,
-            "usup":   0x00001204,
-            "addr":   0x00001304,
-            "dims":   0x00001404,
-            "spax":   0x00001604,
-            "spay":   0x00001704,
+            # T0/Basic
+            0: {
+                "dp":       0x0004,
+                "RED":      0x0104,
+                "thc":      0x0204,
+                "dim":      0x0304,
+                "wup":      0x0404,
+                "sya0":     0x0504,
+                "tch0":     0x0604,
+                "sya1":     0x0704,
+                "tch1":     0x0804,
+                "tch2":     0x0904,
+                "tch3":     0x0a04,
+                "BLUE":     0x0b04,
+                "GRAY":     0x0c04,
+                "rand":     0x0d04,
+                "baud":     0x0e04,
+                "thsp":     0x0f04,
+                "ussp":     0x1004,
+                "thup":     0x1104,
+                "usup":     0x1204,
+                "addr":     0x1304,
+                "dims":     0x1404,
+                "bcpu":     0x1504,
+                "spax":     0x1604,
+                "spay":     0x1704,
+                "WHITE":    0x0008,
+                "BLACK":    0x0108,
+                "GREEN":    0x0208,
+                "BROWN":    0x0308,
+                "thdra":    0x0408,
+                "appid":    0x0508,
+                "bkcmd":    0x0608,
+                "usize":    0x0708,
+                "sleep":    0x0808,
+                "tpdir":    0x0908,
+                "bauds":    0x0a08,
+                "delay":    0x0b08,
+                "YELLOW":   0x0c08,
+                "recmod":   0x0d08,
+                "runmod":   0x0e08,
+                "crcval":   0x0f08,
+                "sendxy":   0x1008,
+                "portbusy": 0x1108,
+            },
+            # K0/Enhanced
+            1: {
+                "dp":       0x0004,
+                "RED":      0x0104,
+                "thc":      0x0204,
+                "dim":      0x0304,
+                "wup":      0x0404,
+                "sya0":     0x0504,
+                "rtc0":     0x0604,
+                "tch0":     0x0704,
+                "pio0":     0x0804,
+                "sya1":     0x0904,
+                "rtc1":     0x0a04,
+                "tch1":     0x0b04,
+                "pio1":     0x0c04,
+                "rtc2":     0x0d04,
+                "tch2":     0x0e04,
+                "pio2":     0x0f04,
+                "rtc3":     0x1004,
+                "tch3":     0x1104,
+                "pio3":     0x1204,
+                "rtc4":     0x1304,
+                "pwm4":     0x1404,
+                "pio4":     0x1504,
+                "rtc5":     0x1604,
+                "pwm5":     0x1704,
+                "pio5":     0x1804,
+                "rtc6":     0x1904,
+                "pwm6":     0x1a04,
+                "pio6":     0x1b04,
+                "pwm7":     0x1c04,
+                "pio7":     0x1d04,
+                "BLUE":     0x0008,
+                "GRAY":     0x0108,
+                "rand":     0x0208,
+                "baud":     0x0308,
+                "pwmf":     0x0408,
+                "thsp":     0x0508,
+                "ussp":     0x0608,
+                "thup":     0x0708,
+                "usup":     0x0808,
+                "addr":     0x0908,
+                "dims":     0x0a08,
+                "bcpu":     0x0b08,
+                "spax":     0x0c08,
+                "spay":     0x0d08,
+                "WHITE":    0x0e08,
+                "BLACK":    0x0f08,
+                "GREEN":    0x1008,
+                "BROWN":    0x1108,
+                "thdra":    0x1208,
+                "appid":    0x1308,
+                "bkcmd":    0x1408,
+                "usize":    0x1508,
+                "sleep":    0x1608,
+                "tpdir":    0x1708,
+                "bauds":    0x1808,
+                "delay":    0x1908,
+                "YELLOW":   0x1a08,
+                "recmod":   0x1b08,
+                "runmod":   0x1c08,
+                "crcval":   0x1d08,
+                "sendxy":   0x1e08,
+                "portbusy": 0x1f08,
+            },
+            # X3/-
+            2: {
+                "dp":       0x0004,
+                "eq0":      0x0104,
+                "eq1":      0x0204,
+                "eq2":      0x0304,
+                "eq3":      0x0404,
+                "eq4":      0x0504,
+                "eq5":      0x0604,
+                "eq6":      0x0704,
+                "eq7":      0x0804,
+                "eq8":      0x0904,
+                "eq9":      0x0a04,
+                "RED":      0x0b04,
+                "thc":      0x0c04,
+                "aph":      0x0d04,
+                "eqh":      0x0e04,
+                "eql":      0x0f04,
+                "dim":      0x1004,
+                "eqm":      0x1104,
+                "wup":      0x1204,
+                "sya0":     0x1304,
+                "tch0":     0x1404,
+                "sya1":     0x1504,
+                "tch1":     0x1604,
+                "tch2":     0x1704,
+                "tch3":     0x1804,
+                "BLUE":     0x1904,
+                "GRAY":     0x1a04,
+                "tprc":     0x1b04,
+                "rand":     0x1c04,
+                "baud":     0x1d04,
+                "thsp":     0x1e04,
+                "ussp":     0x1f04,
+                "thup":     0x2004,
+                "usup":     0x2104,
+                "addr":     0x2204,
+                "dims":     0x2304,
+                "bcpu":     0x2404,
+                "spax":     0x2504,
+                "spay":     0x2604,
+                "WHITE":    0x0008,
+                "BLACK":    0x0108,
+                "GREEN":    0x0208,
+                "BROWN":    0x0308,
+                "thdra":    0x0408,
+                "appid":    0x0508,
+                "bkcmd":    0x0608,
+                "usize":    0x0708,
+                "sleep":    0x0808,
+                "tpdir":    0x0908,
+                "bauds":    0x0a08,
+                "delay":    0x0b08,
+                "audio0":   0x0c08,
+                "audio1":   0x0d08,
+                "YELLOW":   0x0e08,
+                "recmod":   0x0f08,
+                "runmod":   0x1008,
+                "volume":   0x1108,
+                "crcval":   0x1208,
+                "sendxy":   0x1308,
+                "portbusy": 0x1408,
+            },
+            # X5/Intelligent
+            3: {
+                "dp":       0x0004,
+                "eq0":      0x0104,
+                "eq":       0x0204,
+                "eq2":      0x0304,
+                "eq3":      0x0404,
+                "eq4":      0x0504,
+                "eq5":      0x0604,
+                "eq6":      0x0704,
+                "eq7":      0x0804,
+                "eq8":      0x0904,
+                "eq9":      0x0a04,
+                "RED":      0x0b04,
+                "thc":      0x0c04,
+                "aph":      0x0d04,
+                "eqh":      0x0e04,
+                "eql":      0x0f04,
+                "dim":      0x1004,
+                "eqm":      0x1104,
+                "wup":      0x1204,
+                "sya0":     0x1304,
+                "rtc0":     0x1404,
+                "tch0":     0x1504,
+                "pio0":     0x1604,
+                "sya":      0x1704,
+                "rtc":      0x1804,
+                "tch":      0x1904,
+                "pio":      0x1a04,
+                "rtc2":     0x1b04,
+                "tch2":     0x1c04,
+                "pio2":     0x1d04,
+                "rtc3":     0x1e04,
+                "tch3":     0x1f04,
+                "pio3":     0x2004,
+                "rtc4":     0x2104,
+                "pwm4":     0x2204,
+                "pio4":     0x2304,
+                "rtc5":     0x2404,
+                "pwm5":     0x2504,
+                "pio5":     0x2604,
+                "rtc6":     0x2704,
+                "pwm6":     0x2804,
+                "pio6":     0x2904,
+                "pwm7":     0x2a04,
+                "pio7":     0x2b04,
+                "BLUE":     0x2c04,
+                "GRAY":     0x2d04,
+                "tprc":     0x2e04,
+                "rand":     0x2f04,
+                "baud":     0x3004,
+                "pwmf":     0x3104,
+                "thsp":     0x3204,
+                "ussp":     0x3304,
+                "thup":     0x3404,
+                "usup":     0x3504,
+                "addr":     0x3604,
+                "dims":     0x3704,
+                "bcpu":     0x3804,
+                "spax":     0x3904,
+                "spay":     0x3a04,
+                "WHITE":    0x0008,
+                "BLACK":    0x0108,
+                "GREEN":    0x0208,
+                "BROWN":    0x0308,
+                "thdra":    0x0408,
+                "appid":    0x0508,
+                "bkcmd":    0x0608,
+                "usize":    0x0708,
+                "sleep":    0x0808,
+                "tpdir":    0x0908,
+                "bauds":    0x0a08,
+                "delay":    0x0b08,
+                "audio0":   0x0c08,
+                "audio":    0x0d08,
+                "YELLOW":   0x0e08,
+                "recmod":   0x0f08,
+                "runmod":   0x1008,
+                "volume":   0x1108,
+                "crcval":   0x1208,
+                "sendxy":   0x1308,
+                "portbusy": 0x1408,
+            },
+            # T1/Discovery
+            100: {
+                "dp":       0x0004,
+                "RED":      0x0104,
+                "thc":      0x0204,
+                "dim":      0x0304,
+                "wup":      0x0404,
+                "sya0":     0x0504,
+                "tch0":     0x0604,
+                "sya1":     0x0704,
+                "tch1":     0x0804,
+                "tch2":     0x0904,
+                "tch3":     0x0a04,
+                "BLUE":     0x0b04,
+                "GRAY":     0x0c04,
+                "rand":     0x0d04,
+                "baud":     0x0e04,
+                "thsp":     0x0f04,
+                "ussp":     0x1004,
+                "thup":     0x1104,
+                "usup":     0x1204,
+                "addr":     0x1304,
+                "dims":     0x1404,
+                "bcpu":     0x1504,
+                "spax":     0x1604,
+                "spay":     0x1704,
+                "WHITE":    0x0008,
+                "BLACK":    0x0108,
+                "GREEN":    0x0208,
+                "BROWN":    0x0308,
+                "thdra":    0x0408,
+                "appid":    0x0508,
+                "bkcmd":    0x0608,
+                "usize":    0x0708,
+                "sleep":    0x0808,
+                "tpdir":    0x0908,
+                "bauds":    0x0a08,
+                "delay":    0x0b08,
+                "YELLOW":   0x0c08,
+                "recmod":   0x0d08,
+                "runmod":   0x0e08,
+                "crcval":   0x0f08,
+                "sendxy":   0x1008,
+                "lowpower": 0x1108,
+                "portbusy": 0x1208,
+            },
         }
-        _operandTypesDecode    = dict([(v, k) for k, v in _operandTypesEncode.items()])
-        _listOperatorsDecode   = dict([(v, k) for k, v in _listOperatorsEncode.items()])
-        _systemVariablesDecode = dict([(v, k) for k, v in _systemVariablesEncode.items()])
+        _operandTypesDecode   = {v: k for k, v in _operandTypesEncode.items()}
+        _listOperatorsDecode    = {type: {v: k for k, v in ops.items()} for type, ops in _listOperatorsEncode.items()}
+        _systemVariablesDecode = {type: {v: k for k, v in sysvars.items()} for type, sysvars in _systemVariablesEncode.items()}
 
-        def __init__(self, rawBlock:bytes, hexVals=True, globalVars=dict(), localVars=dict()):
+        def __init__(self, model_series:int, rawBlock:bytes, hexVals=True, globalVars=dict(), localVars=dict()):
+            self.series = model_series
             self.raw = rawBlock
             self._asHex = hexVals
             self._globalVars = globalVars
@@ -182,7 +807,7 @@ class Usercode:
                             operation = True
                             break
                 if not operation:
-                    starts = (b"\x09", struct.pack("<H", self._listOperatorsEncode["jmp"]))
+                    starts = (b"\x09", struct.pack("<H", self._listOperatorsEncode[self.series]["jmp"]))
                     for s in starts:
                         if self.raw.startswith(s):
                             l = len(s)
@@ -216,8 +841,8 @@ class Usercode:
                                     self.decoded = self.decoded[:-1]
                                     localI -= 1
                                 op = struct.unpack_from(dataStruct, self.raw, localI)[0]
-                                if op in self._listOperatorsDecode:
-                                    self.decoded += self._listOperatorsDecode[op]
+                                if op in self._listOperatorsDecode[self.series]:
+                                    self.decoded += self._listOperatorsDecode[self.series][op]
                                 else:
                                     self.decoded += "op:" + self._hexOrNot(op)
 
@@ -233,7 +858,7 @@ class Usercode:
                                     elif b== 5: #global variable
                                         varLookup = self._globalVars
                                     elif b == 4: #system variable
-                                        varLookup = self._systemVariablesDecode
+                                        varLookup = self._systemVariablesDecode[self.series]
                                     if val not in varLookup:
                                         self.decoded += self._operandTypesDecode[b] + self._hexOrNot(val)
                                     else:
@@ -278,16 +903,17 @@ class Usercode:
             else:
                 return hexStr(self.raw)
 
-    def __init__(self, rawUsercode:bytes, hexVals=True):
+    def __init__(self, model_series:int, rawUsercode:bytes, hexVals=True):
+        self.series = model_series
         self.raw = rawUsercode
         nextBlock = 0
         #self.rawGlobalMem, nextBlock = self._getRawBlock(nextBlock)
         #self.rawPageList, nextBlock  = self._getRawBlock(nextBlock)
         self.blocks = dict()
-        while nextBlock < len(self.raw):
+        while nextBlock <= len(self.raw) - 4:
             currentBlock = nextBlock
-            raw, nextBlock = self._getRawBlock(nextBlock)
-            self.blocks[currentBlock] = self.CodeBlock(raw)
+            raw, nextBlock = self._getRawBlock(currentBlock)
+            self.blocks[currentBlock] = self.CodeBlock(model_series, raw)
         #self.pages = dict()
         #for i in range(0, len(self.rawPageList), 6):
         #    value = self.rawPageList[i+0:i+4]
@@ -304,7 +930,6 @@ class Usercode:
 
 class HeaderData:
     def __init__(self, raw:bytes, properties:dict, xor:int=0):
-        self.xor     = xor
         self.size    = properties["size"]
         self.start   = properties["start"]
         self.hasCRC  = properties["hasCRC"]
@@ -325,173 +950,140 @@ class HeaderData:
         if self.hasCRC:
             fullStruct += "I"
 
-        data = struct.unpack_from(fullStruct, raw, self.start)
-        for i,k in enumerate(self.content.keys()):
-            self.content[k] = data[i] ^ self.xor
+        data = raw[self.start: (self.start + self.size)]
+
+        # XOR decoding. By default the key does nothing.
+        self.key = bytes(len(raw))
+        self.encrypted = False
+        if xor:
+            self.encrypted = True
+            if type(xor) is int:
+                self.key = struct.pack("<I", xor)
+                self.key = self.key * (self.size // len(self.key) + 1)
+            else:
+                self.key = xor
+            # only decode the part that actually contains encoded data. Copy the rest as-is.
+            data = bytes([b ^ self.key[i] for i, b in enumerate(data[:self._contentSize])]) + data[self._contentSize:]
+        data = struct.unpack(fullStruct, data)
+        for i, k in enumerate(self.content.keys()):
+            self.content[k] = data[i]
         if self.hasCRC:
             self.crc = data[-1]
 
     def getRaw(self):
-        data = [d ^ self.xor for d in self.content.values()]
-        raw = struct.pack(self._contentStruct, *data)
+        raw = struct.pack(self._contentStruct, *self.content.values())
+        if self.encrypted:
+            raw = bytes([b ^ self.key[i] for i, b in enumerate(raw)])
         raw += b"\xff" * self._emptyRegion
         if self.hasCRC:
             self.crc = Checksum().CRC(data=raw)
             raw += struct.pack("<I", self.crc)
         return raw
 
+
 class TFTFile:
-    _models = [
-        "TJC3224T022_011",
-        "TJC3224T024_011",
-        "TJC3224T028_011",
-        "TJC4024T032_011",
-        "TJC4832T035_011",
-        "TJC4827T043_011",
-        "TJC8048T050_011",
-        "TJC8048T070_011",
-        "TJC3224T122_011",
-        "TJC3224T124_011",
-        "TJC3224T128_011",
-        "TJC4024T132_011",
-        "TJC4832T135_011",
-        "TJC3224K022_011",
-        "TJC3224K024_011",
-        "TJC3224K028_011",
-        "TJC4024K032_011",
-        "TJC4832K035_011",
-        "TJC4827K043_011",
-        "TJC8048K050_011",
-        "TJC8048K070_011",
-        "TJC4848X340_011",
-        "TJC4827X343_011",
-        "TJC8048X343_011",
-        "TJC8048X350_011",
-        "TJC8048X370_011",
-        "TJC1060X370_011",
-        "TJC8060X380_011",
-        "TJC1060X3A1_011",
-        "TJC4848X540_011",
-        "TJC4827X543_011",
-        "TJC8048X543_011",
-        "TJC8048X550_011",
-        "TJC8048X570_011",
-        "TJC1060X570_011",
-        "TJC8060X580_011",
-        "TJC1060X5A1_011",
-         "NX3224T024_011",
-         "NX3224T028_011",
-         "NX4024T032_011",
-         "NX4832T035_011",
-         "NX4827T043_011",
-         "NX8048T050_011",
-         "NX8048T070_011",
-         "NX3224K024_011",
-         "NX3224K028_011",
-         "NX4024K032_011",
-         "NX4832K035_011",
-         "NX4827K043_011",
-         "NX8048K050_011",
-         "NX8048K070_011",
-         "NX4827P043_011",
-         "NX8048P050_011",
-         "NX8048P070_011",
-         "NX1060P070_011",
-         "NX1060P101_011",
-    ]
-    _modelCRCs = [Checksum().CRC(data=m.encode("ascii")) for m in _models]
 
     _modelXORs = {
-         "NX4024K032_011": 0x45c41179,
-         "NX4832K035_011": 0x95febed7,
-         "NX4827K043_011": 0x60e7e153,
-         "NX8048K050_011": 0x453322c1,
-         "NX8048K070_011": 0xbe2cef78,
+         "NX3224T024_011": 0x6d713e32,
          "NX3224T028_011": 0x965cdd00,
          "NX4024T032_011": 0x3b91869c,
          "NX4832T035_011": 0xebab2932,
          "NX4827T043_011": 0x1eb276b6,
          "NX8048T050_011": 0x3b66b524,
          "NX8048T070_011": 0xc079789d,
+
+         "NX4832F035_011": None,
+
          "NX3224K024_011": 0x1324a9d7,
          "NX3224K028_011": 0xe8094ae5,
-         "NX3224T024_011": 0x6d713e32,
+         "NX4024K032_011": 0x45c41179,
+         "NX4832K035_011": 0x95febed7,
+         "NX4827K043_011": 0x60e7e153,
+         "NX8048K050_011": 0x453322c1,
+         "NX8048K070_011": 0xbe2cef78,
+
+         "NX4827P043_011": 0xcdc7c258,
+         "NX8048P050_011": 0xe81301ca,
+         "NX8048P070_011": 0x130ccc73,
+         "NX1060P070_011": 0x18a58690,
+         "NX1060P101_011": 0xdcb511f5,
+
+        "TJC3224T022_011": 0x189a66fb,
+        "TJC3224T024_011": 0x54cd4ea3,
+        "TJC3224T028_011": 0xafe0ad91,
+        "TJC4024T032_011": 0x022df60d,
+        "TJC4832T035_011": 0xd21759a3,
+        "TJC4827T043_011": 0x270e0627,
+        "TJC8048T050_011": 0x02dac5b5,
+        "TJC8048T070_011": 0xf9c5080c,
 
         "TJC3224K022_011": 0x66cff11e,
         "TJC3224K024_011": 0x2a98d946,
         "TJC3224K028_011": 0xd1b53a74,
-        "TJC3224T022_011": 0x189a66fb,
-        "TJC3224T024_011": 0x54cd4ea3,
-        "TJC3224T028_011": 0xafe0ad91,
         "TJC4024K032_011": 0x7c7861e8,
-        "TJC4024T032_011": 0x022df60d,
         "TJC4827K043_011": 0x595b91c2,
-        "TJC4827T043_011": 0x270e0627,
         "TJC4832K035_011": 0xac42ce46,
-        "TJC4832T035_011": 0xd21759a3,
         "TJC8048K050_011": 0x7c8f5250,
         "TJC8048K070_011": 0x87909fe9,
-        "TJC8048T050_011": 0x02dac5b5,
-        "TJC8048T070_011": 0xf9c5080c,
 
-        "NX1060P070_011": 0x18a58690,
-        "NX1060P101_011": 0xdcb511f5,
-        "NX8048P050_011": 0xe81301ca,
-        "NX8048P070_011": 0x130ccc73,
-        "TJC1060X370_011": 0xa31e7f66,
-        "TJC1060X3A1_011": 0x2c3a9902,
-        "TJC1060X570_011": 0xb3fbd54d,
-        "TJC1060X5A1_011": 0x3cdf3329,
-        "TJC4827X343_011": 0x767c3bae,
-        "TJC4827X543_011": 0x66999185,
         "TJC4848X340_011": 0x9ea280d2,
-        "TJC4848X540_011": 0x8e472af9,
+        "TJC4827X343_011": 0x767c3bae,
         "TJC8048X343_011": 0x5eb5f196,
         "TJC8048X350_011": 0x53a8f83c,
         "TJC8048X370_011": 0xa8b73585,
+        "TJC1060X370_011": 0xa31e7f66,
+        "TJC8060X380_011": 0xd9b92b5c,
+        "TJC1060X3A1_011": 0x2c3a9902,
+
+        "TJC4848X540_011": 0x8e472af9,
+        "TJC4827X543_011": 0x66999185,
         "TJC8048X543_011": 0x4e505bbd,
         "TJC8048X550_011": 0x434d5217,
         "TJC8048X570_011": 0xb8529fae,
-        "TJC8060X380_011": 0xd9b92b5c,
+        "TJC1060X570_011": 0xb3fbd54d,
         "TJC8060X580_011": 0xc95c8177,
+        "TJC1060X5A1_011": 0x3cdf3329,
     }
+    _models = list(_modelXORs.keys())
+    _modelCRCs = [Checksum().CRC(data=m.encode("ascii")) for m in _models]
 
     _fileHeader1 = {
         "size":    0xc8,
         "start":   0x00,
         "hasCRC":  True,
         "content": {
-            "unknown0":                {"struct": "B", "val": None},
-            "editorVersionMain":       {"struct": "B", "val": None},
-            "editorVersionSub":        {"struct": "B", "val": None},
-            "editorVendor":            {"struct": "B", "val": None},
-            "unknown1":                {"struct": "I", "val": None},
-            "brv0":                    {"struct": "H", "val": None}, #bootloader related value 0
-            "unknown2":                {"struct": "H", "val": None},
-            "resolutionHor":           {"struct": "H", "val": None},
-            "resolutionVer":           {"struct": "H", "val": None},
-            "resolutionHorCopy":       {"struct": "H", "val": None},
-            "resolutionVerCopy":       {"struct": "H", "val": None},
-            "orientation":             {"struct": "B", "val": None},
-            "fileCRCAlgorithm":        {"struct": "H", "val": None},
-            "editorVersionBugfix":     {"struct": "B", "val": None},
-            "brv1":                    {"struct": "H", "val": None}, #bootloader related value 1
-            "unknown4":                {"struct": "H", "val": None},
-            "unknown5":                {"struct": "H", "val": None},
-            "brv1Copy":                {"struct": "H", "val": None},
-            "unknown4Copy":            {"struct": "H", "val": None},
-            "unknown6":                {"struct": "I", "val": None},
-            "unknown7":                {"struct": "I", "val": None},
-            "brv2":                    {"struct": "H", "val": None}, #bootloader related value 2
-            "unknown8":                {"struct": "H", "val": None},
-            "modelCRC":                {"struct": "I", "val": None},
-            "unknown9":                {"struct": "H", "val": None},
-            "sectionSize":             {"struct": "I", "val": None},
-            "unknown10":               {"struct": "I", "val": None},
-            "fileLength":              {"struct": "I", "val": None},
-            "unknown11":               {"struct": "I", "val": None},
-            "bootloaderRessourcesCRC": {"struct": "I", "val": None},
-            "unknown12":               {"struct": "I", "val": None},
+            "old_lcd_orientation":                  {"struct": "B", "val": None}, # editor fixes this to 0
+            "editor_version_main":                  {"struct": "B", "val": None},
+            "editor_version_sub":                   {"struct": "B", "val": None},
+            "editor_vendor":                        {"struct": "B", "val": None},
+            "unknown_old_gujian_address":           {"struct": "I", "val": None},
+            "unknwon_old_gujian_size":              {"struct": "I", "val": None},
+            "old_lcd_resolution_width":             {"struct": "H", "val": None}, # always largest resolution
+            "old_lcd_resolution_height":            {"struct": "H", "val": None}, # always smallest resolution
+            "lcd_resolution_x":                     {"struct": "H", "val": None}, # x-resolution in current orientation (cf ui_orientation)
+            "lcd_resolution_y":                     {"struct": "H", "val": None}, # y-resolution in current orientation (cf ui_orientation)
+            "ui_orientation":                       {"struct": "B", "val": None},
+            "model_series":                         {"struct": "B", "val": None}, # 0=T0, 1=K0, 2=X3, 3=X5, 100=T1
+            "unknown_otp":                          {"struct": "B", "val": None},
+            "editor_version_bugfix":                {"struct": "B", "val": None},
+            "unknown_stm32_lcddriver_address":      {"struct": "I", "val": None},
+            "unknown_res1":                         {"struct": "H", "val": None},
+            "unknown_old_stm32_lcddriver_address":  {"struct": "I", "val": None},
+            "unknown_stm32_lcddriver_size":         {"struct": "I", "val": None},
+            "unknown_stm32_binary_address":         {"struct": "I", "val": None},
+            "unknown_stm32_binary_size":            {"struct": "I", "val": None},
+            "model_crc":                            {"struct": "I", "val": None},
+            "file_version":                         {"struct": "B", "val": None},
+            "unknown_encode_start":                 {"struct": "B", "val": None},
+            "ressources_files_address":             {"struct": "I", "val": None},
+            "ressources_files_count":               {"struct": "I", "val": None},
+            "file_size":                            {"struct": "I", "val": None},
+            "ressource_files_size":                 {"struct": "I", "val": None},
+            "ressource_files_crc":                  {"struct": "I", "val": None},
+            "unknown_memory_fs_size":               {"struct": "I", "val": None},
+            "unknown_next_file_address":            {"struct": "I", "val": None},
+            "unknown_file_id":                      {"struct": "I", "val": None},
+            "unknown_metadata_size":                {"struct": "I", "val": None},
         },
     }
     _fileHeader2 = {
@@ -499,25 +1091,31 @@ class TFTFile:
         "start":   0xc8,
         "hasCRC":  True,
         "content": {
-            "usercodeLength":          {"struct": "I", "val": None},
-            "usercodeLengthCopy":      {"struct": "I", "val": None},
-            "unknown21":               {"struct": "I", "val": None},
-            "unknown22":               {"struct": "I", "val": None},
-            "bootloaderStart":         {"struct": "I", "val": None},
-            "usercodeStart":           {"struct": "I", "val": None},
-            "unknown23":               {"struct": "I", "val": None},
-            "unknown24":               {"struct": "I", "val": None},
-            "ressourcesPicturesStart": {"struct": "I", "val": None},
-            "unknown25":               {"struct": "I", "val": None}, # POSSIBLY the key
-            "unknown26":               {"struct": "I", "val": None},
-            "unknown27":               {"struct": "I", "val": None},
-            "ressourcesFontsStart":    {"struct": "I", "val": None},
-            "unknown28":               {"struct": "I", "val": None},
-            "unknown29":               {"struct": "I", "val": None},
-            "ressourcesPicturesCount": {"struct": "I", "val": None},
-            "unknown30":               {"struct": "I", "val": None},
-            "ressourcesFontsCount":    {"struct": "I", "val": None},
-            "unknown31":               {"struct": "I", "val": None},
+            "static_usercode_address":      {"struct": "I", "val": None},
+            "unknown_app_vas_address":      {"struct": "I", "val": None},
+            "unknown_app_vas_count":        {"struct": "I", "val": None},
+            "app_attributes_data_address":  {"struct": "I", "val": None},
+            "ressources_files_address":     {"struct": "I", "val": None},
+            "usercode_address":             {"struct": "I", "val": None},
+            "unknown_pages_address":        {"struct": "I", "val": None},
+            "unknown_objects_address":      {"struct": "I", "val": None},
+            "pictures_address":             {"struct": "I", "val": None},
+            "gmovs_address":                {"struct": "I", "val": None},
+            "videos_address":               {"struct": "I", "val": None},
+            "audios_address":               {"struct": "I", "val": None},
+            "fonts_address":                {"struct": "I", "val": None},
+            "unknown_maincode_binary":      {"struct": "I", "val": None},
+            "pages_count":                  {"struct": "H", "val": None},
+            "unknown_objects_count":        {"struct": "H", "val": None},
+            "pictures_count":               {"struct": "H", "val": None},
+            "gmovs_count":                  {"struct": "H", "val": None},
+            "videos_count":                 {"struct": "H", "val": None},
+            "audios_count":                 {"struct": "H", "val": None},
+            "fonts_count":                  {"struct": "H", "val": None},
+            "unknown_res1":                 {"struct": "H", "val": None},
+            "unknown_encode":               {"struct": "B", "val": None},
+            "unknown_res2":                 {"struct": "B", "val": None},
+            "unknown_res3":                 {"struct": "H", "val": None},
         },
     }
 
@@ -526,7 +1124,7 @@ class TFTFile:
         self.hexVals = hexVals
         self.header1 = HeaderData(self.raw, self._fileHeader1)
         try:
-            self.model = self._models[self._modelCRCs.index(self._getVal("modelCRC"))]
+            self.model = self._models[self._modelCRCs.index(self._getVal("model_crc"))]
         except:
             self.model = "Unknown display model"
         xor = 0
@@ -535,30 +1133,32 @@ class TFTFile:
         self.header2 = HeaderData(self.raw, self._fileHeader2, xor)
 
         # Decode Usercode:
-        usercodeStart = self._getVal("usercodeStart")
-        usercodeEnd   = usercodeStart + self._getVal("usercodeLength")
-        self.usercode = Usercode(self.raw[usercodeStart : usercodeEnd], hexVals)
+        self.usercode = Usercode(self._getVal("model_series"), self.getRawUsercode(), hexVals)
 
     def getRawBootloader(self):
-        return self.raw[self._getVal("bootloaderStart") : self._getVal("ressourcesPicturesStart")]
+        start = self._getVal("ressources_files_address")
+        end = start + self._getVal("ressources_files_size")
+        return self.raw[start:end]
 
     def getRawPictures(self):
-        return self.raw[self._getVal("ressourcesPicturesStart") : self._getVal("ressourcesFontsStart")]
+        start = self._getVal("pictures_address")
+        end = start + self._getVal("gmovs_address")
+        return self.raw[start:end]
 
     def getRawFonts(self):
         # Hacky.
         end = -1
-        for i in reversed(range(self._getVal("ressourcesFontsStart"), self._getVal("usercodeStart"))):
+        for i in reversed(range(self._getVal("fonts_address"), self._getVal("usercode_address"))):
             if(self.raw[i] != 0x00):
                 end = i + 1
                 break
         if end > 0:
-            return self.raw[self._getVal("ressourcesFontsStart") : end]
+            return self.raw[self._getVal("fonts_address") : end]
         else:
             return b""
 
     def getRawUsercode(self):
-        return self.raw[self._getVal("usercodeStart") : -4]
+        return self.raw[self._getVal("usercode_address") : self._getVal("unknown_pages_address")]
 
     def exportRawBootloader(self, path = "/Raw/Bootloader.bin"):
         with open(path, "w") as f:
@@ -578,8 +1178,8 @@ class TFTFile:
 
     def getReadable(self, includeUnknowns = False, includeBins = False):
         d = pdict()
-        d["GeneralInfo"] = {"Target Model": self.model, "Header 2 XOR Key": hex(self.header2.xor)}
-        if not self.header2.xor:
+        d["GeneralInfo"] = {"Target Model": self.model}
+        if not self.header2.encrypted:
             d["GeneralInfo"]["Header 2 XOR Key"] = "Unknown (used 0x00)"
         d["Header1"]     = dict([(k, v) for k,v in self.header1.content.items() if includeUnknowns or (not k.startswith("unknown"))])
         d["Header2"]     = dict([(k, hex(v)) for k,v in self.header2.content.items() if includeUnknowns or (not k.startswith("unknown"))])
@@ -625,8 +1225,8 @@ class TFTFile:
 
         # Set vendor, model CRC and XOR key to the new model
         self.model = model
-        self.header1.content["editorVendor"] = ord(model[0])
-        self.header1.content["modelCRC"] = self._modelCRCs[self._models.index(model)]
+        self.header1.content["editor_vendor"] = ord(model[0])
+        self.header1.content["model_crc"] = self._modelCRCs[self._models.index(model)]
         self.header2.xor = self._modelXORs[model]
 
         # Convert modified headers back to raw, which also updates the header checksums
@@ -637,15 +1237,14 @@ class TFTFile:
         self.raw = raw + self.raw[len(raw):]
 
         # Update file checksum with the correct checksum algorithm
-        crcAlgo = self._getVal("fileCRCAlgorithm")
-        if crcAlgo not in (0, 1, 2, 3):
-            raise Exception("Unknown file CRC ({}).".format(crcAlgo))
+        series = self._getVal("model_series")
+        if series not in (0, 1, 2, 3, 100):
+            raise Exception(f"Unknown model series ({series}).")
         # Remove old checksum
         self.raw = self.raw[:-4]
-        if crcAlgo >= 2:
+        if series in (2, 3):
             # word based
-            words = len(self.raw) // 4
-            missingBytes = len(self.raw) - 4 * words
+            words = 4 - len(self.raw) % 4
             words = list(struct.unpack("<{}I".format(words), self.raw + b"\x00" * missingBytes))
             checksum = Checksum().CRC(data=words)
         else:
