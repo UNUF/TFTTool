@@ -1244,7 +1244,7 @@ class TFTFile:
         self.raw = self.raw[:-4]
         if series in (2, 3):
             # word based
-            words = 4 - len(self.raw) % 4
+            missingBytes = 4 - len(self.raw) % 4
             words = list(struct.unpack("<{}I".format(words), self.raw + b"\x00" * missingBytes))
             checksum = Checksum().CRC(data=words)
         else:
