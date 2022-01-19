@@ -929,7 +929,7 @@ class Usercode:
         return self.raw[offset:newOffset], newOffset
 
 class HeaderData:
-    def __init__(self, raw:bytes, properties:dict, xor:int=0):
+    def __init__(self, raw:bytes, properties:dict, decode_hint:int=0):
         self.size    = properties["size"]
         self.start   = properties["start"]
         self.hasCRC  = properties["hasCRC"]
@@ -950,25 +950,68 @@ class HeaderData:
         if self.hasCRC:
             fullStruct += "I"
 
+        # Now that the structure has been parsed from the content dict, convert it to a flat, "normal" k:v dict and
+        # initialize it with the given default values.
+        for k, v in self.content.items():
+            self.content[k] = v["val"]
+
         data = raw[self.start: (self.start + self.size)]
 
         # XOR decoding. By default the key does nothing.
         self.key = bytes(len(raw))
         self.encrypted = False
-        if xor:
-            self.encrypted = True
-            if type(xor) is int:
-                self.key = struct.pack("<I", xor)
-                self.key = self.key * (self.size // len(self.key) + 1)
+        if type(decode_hint) is int:
+            if decode_hint:
+                self.encrypted = True
+                if type(decode_hint) is int:
+                    self.key = struct.pack("<I", decode_hint)
+                    self.key = self.key * (self.size // len(self.key) + 1)
+                else:
+                    self.key = decode_hint
+                # only decode the part that actually contains encoded data. Copy the rest as-is.
+                data = bytes([b ^ self.key[i] for i, b in enumerate(data[:self._contentSize])]) + data[self._contentSize:]
+            data = struct.unpack(fullStruct, data)
+            for i, k in enumerate(self.content.keys()):
+                self.content[k] = data[i]
+            if self.hasCRC:
+                self.crc = data[-1]
+        # (partially) decoded header. In this case we ignore the data from raw.
+        elif type(decode_hint) is str:
+            # String can be hex data ("01 3a 44 [...]"), a json with values, or a file path to either one.
+            # Check if it's a file path. If so, replace the hint with the file content.
+            try:
+                with open(decode_hint) as f:
+                    decode_hint = f.read()
+            except OSError:
+                pass
+            data = None
+            # Check if it's a hex string...
+            try:
+                data = bytes.fromhex(decode_hint)
+            except ValueError:
+                pass
+            if data:
+                data = struct.unpack_from(self._contentStruct, data, 0)
+                for i, k in enumerate(self.content.keys()):
+                    self.content[k] = data[i]
+            # ... else check if it's a json string...
             else:
-                self.key = xor
-            # only decode the part that actually contains encoded data. Copy the rest as-is.
-            data = bytes([b ^ self.key[i] for i, b in enumerate(data[:self._contentSize])]) + data[self._contentSize:]
-        data = struct.unpack(fullStruct, data)
-        for i, k in enumerate(self.content.keys()):
-            self.content[k] = data[i]
-        if self.hasCRC:
-            self.crc = data[-1]
+                try:
+                    # Double quotes get removed from the CLI if not escaped. Single quotes work, but the json parser
+                    # doesn't like them.
+                    data = json.loads(decode_hint.replace("\'", "\""))
+                except json.decoder.JSONDecodeError:
+                    pass
+                if data:
+                    # Skip all unknown keys.
+                    for k, v in data.items():
+                        if k in self.content:
+                            self.content[k] = v
+
+            # Update CRC. This requires serializing the data. Both things are done by getRaw
+            # even though we don't use or need the actual raw version of the header.
+            self.getRaw()
+
 
     def getRaw(self):
         raw = struct.pack(self._contentStruct, *self.content.values())
@@ -992,6 +1035,8 @@ class TFTFile:
          "NX8048T050_011": 0x3b66b524,
          "NX8048T070_011": 0xc079789d,
 
+         "NX3224F024_011": None,
+         "NX3224F028_011": None,
          "NX4832F035_011": None,
 
          "NX3224K024_011": 0x1324a9d7,
@@ -1016,6 +1061,13 @@ class TFTFile:
         "TJC4827T043_011": 0x270e0627,
         "TJC8048T050_011": 0x02dac5b5,
         "TJC8048T070_011": 0xf9c5080c,
+
+        "TJC1612T118_011": None,
+        "TJC3224T122_011": None,
+        "TJC3224T124_011": None,
+        "TJC3224T128_011": None,
+        "TJC4024T132_011": None,
+        "TJC4832T135_011": None,
 
         "TJC3224K022_011": 0x66cff11e,
         "TJC3224K024_011": 0x2a98d946,
@@ -1119,7 +1171,7 @@ class TFTFile:
         },
     }
 
-    def __init__(self, raw:bytes, hexVals=True):
+    def __init__(self, raw:bytes, hexVals=True, header2_hint:str=""):
         self.raw = raw
         self.hexVals = hexVals
         self.header1 = HeaderData(self.raw, self._fileHeader1)
@@ -1127,10 +1179,12 @@ class TFTFile:
             self.model = self._models[self._modelCRCs.index(self._getVal("model_crc"))]
         except:
             self.model = "Unknown display model"
-        xor = 0
+        decode_hint = 0
         if self.model in self._modelXORs:
-            xor = self._modelXORs[self.model]
-        self.header2 = HeaderData(self.raw, self._fileHeader2, xor)
+            decode_hint = self._modelXORs[self.model]
+        if not decode_hint:
+            decode_hint = header2_hint
+        self.header2 = HeaderData(self.raw, self._fileHeader2, decode_hint)
 
         # Decode Usercode:
         self.usercode = Usercode(self._getVal("model_series"), self.getRawUsercode(), hexVals)
@@ -1244,7 +1298,8 @@ class TFTFile:
         self.raw = self.raw[:-4]
         if series in (2, 3):
             # word based
-            missingBytes = 4 - len(self.raw) % 4
+            words = len(self.raw) // 4
+            missingBytes = len(self.raw) - words * 4
             words = list(struct.unpack("<{}I".format(words), self.raw + b"\x00" * missingBytes))
             checksum = Checksum().CRC(data=words)
         else:
@@ -1273,6 +1328,17 @@ if __name__ == '__main__':
                              "original file name. Use -t LIST to list all available models. Use -t NXT or -t TJC "
                              "to keep the original model but change the vendor. Note that this does not work for the "
                              "X3, X5 and P series.")
+    parser.add_argument("--header2", default="",
+                        help="Optional parameter to provide the decoded header 2 for T1/Discovery series files. Can "
+                             "either be a string with a json (see TFTTool source for the parameters and their names "
+                             "that header 2 includes), or a string with the raw hex values (\"00 01 AC D3 ...\") "
+                             "or a path to a file with either a json or a hex string. In the case of the hex string "
+                             "the full header is required (minus the empty part at the end). In the case of the json "
+                             "the order and the number of parameters given does not matter. However, when the argument "
+                             "is a json string you must enclose it with double quotes and use single quotes within the "
+                             "json string like this: \"{'hello':42,'world':26}\". For the json file this is possible, "
+                             "too, but not required. Alternatively, you must escape the double quotes in the json "
+                             "string (\"{\\\"hello\\\":42,\\\"world\\\":26}\". This does not work for the json file.")
     parser.add_argument("-f", "--force", action="store_true",
                         help="Add this flag to skip the model check during conversion. Not recommended and probably "
                              "doesn't give you the results you want. Use at your own risk. ")
@@ -1288,7 +1354,7 @@ if __name__ == '__main__':
         outputPath = Path(outputPath)
 
     with open(tftPath, "rb") as f:
-        tft = TFTFile(f.read())
+        tft = TFTFile(f.read(), header2_hint=args.header2)
 
     args.target = args.target.upper()
     if args.target == "TXT":
