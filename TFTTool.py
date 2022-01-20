@@ -376,20 +376,20 @@ class Usercode:
                 "page":     0x40b,
                 "line":     0x40c,
                 "fill":     0x40d,
-                "pa_q":     0x410,
-                "picq":     0x411,
-                "fstr":     0x412,
-                "nstr":     0x413,
-                "xstr":     0x414,
-                "zstr":     0x415,
-                "cirs":     0x416,
-                "addt":     0x417,
-                "init":     0x418,
-                "rfpt":     0x419,
-                "wfpt":     0x41a,
-                "rest":     0x41b,
-                "draw":     0x41d,
-                "covx":     0x41e,
+                "pa_q":     0x40e,
+                "picq":     0x40f,
+                "fstr":     0x410,
+                "nstr":     0x411,
+                "xstr":     0x412,
+                "zstr":     0x413,
+                "cirs":     0x414,
+                "addt":     0x415,
+                "init":     0x416,
+                "rfpt":     0x417,
+                "wfpt":     0x418,
+                "rest":     0x419,
+                "draw":     0x420,
+                "covx":     0x421,
                 "click":    0x800,
                 "comok":    0x801,
                 "btlen":    0x802,
@@ -423,11 +423,11 @@ class Usercode:
                 "com_stop": 0x81e,
                 "ref_star": 0x81f,
                 "com_star": 0x820,
-                "doevents": 0x822,
-                "timerset": 0x823,
-                "getpassw": 0x824,
-                "lcd_refx": 0x825,
-                "setbaudz": 0x826,
+                "doevents": 0x821,
+                "timerset": 0x822,
+                "getpassw": 0x823,
+                "lcd_refx": 0x824,
+                "setbaudz": 0x825,
             },
         }
         _unaryOperators  = ["++", "--"]
@@ -1035,9 +1035,9 @@ class TFTFile:
          "NX8048T050_011": 0x3b66b524,
          "NX8048T070_011": 0xc079789d,
 
-         "NX3224F024_011": None,
-         "NX3224F028_011": None,
-         "NX4832F035_011": None,
+         "NX3224F024_011": 0,
+         "NX3224F028_011": 0,
+         "NX4832F035_011": 0,
 
          "NX3224K024_011": 0x1324a9d7,
          "NX3224K028_011": 0xe8094ae5,
@@ -1062,12 +1062,12 @@ class TFTFile:
         "TJC8048T050_011": 0x02dac5b5,
         "TJC8048T070_011": 0xf9c5080c,
 
-        "TJC1612T118_011": None,
-        "TJC3224T122_011": None,
-        "TJC3224T124_011": None,
-        "TJC3224T128_011": None,
-        "TJC4024T132_011": None,
-        "TJC4832T135_011": None,
+        "TJC1612T118_011": 0,
+        "TJC3224T122_011": 0,
+        "TJC3224T124_011": 0,
+        "TJC3224T128_011": 0,
+        "TJC4024T132_011": 0,
+        "TJC4832T135_011": 0,
 
         "TJC3224K022_011": 0x66cff11e,
         "TJC3224K024_011": 0x2a98d946,
@@ -1104,38 +1104,38 @@ class TFTFile:
         "start":   0x00,
         "hasCRC":  True,
         "content": {
-            "old_lcd_orientation":                  {"struct": "B", "val": None}, # editor fixes this to 0
-            "editor_version_main":                  {"struct": "B", "val": None},
-            "editor_version_sub":                   {"struct": "B", "val": None},
-            "editor_vendor":                        {"struct": "B", "val": None},
-            "unknown_old_firmware_address":         {"struct": "I", "val": None},
-            "unknwon_old_firmware_size":            {"struct": "I", "val": None},
-            "old_lcd_resolution_width":             {"struct": "H", "val": None}, # always largest resolution
-            "old_lcd_resolution_height":            {"struct": "H", "val": None}, # always smallest resolution
-            "lcd_resolution_x":                     {"struct": "H", "val": None}, # x-resolution in current orientation (cf ui_orientation)
-            "lcd_resolution_y":                     {"struct": "H", "val": None}, # y-resolution in current orientation (cf ui_orientation)
-            "ui_orientation":                       {"struct": "B", "val": None},
-            "model_series":                         {"struct": "B", "val": None}, # 0=T0, 1=K0, 2=X3, 3=X5, 100=T1
-            "unknown_otp":                          {"struct": "B", "val": None},
-            "editor_version_bugfix":                {"struct": "B", "val": None},
-            "unknown_stm32_lcddriver_address":      {"struct": "I", "val": None},
-            "unknown_res1":                         {"struct": "H", "val": None},
-            "unknown_old_stm32_lcddriver_address":  {"struct": "I", "val": None},
-            "unknown_stm32_lcddriver_size":         {"struct": "I", "val": None},
-            "unknown_stm32_binary_address":         {"struct": "I", "val": None},
-            "unknown_stm32_binary_size":            {"struct": "I", "val": None},
-            "model_crc":                            {"struct": "I", "val": None},
-            "file_version":                         {"struct": "B", "val": None},
-            "unknown_encode_start":                 {"struct": "B", "val": None},
-            "ressources_files_address":             {"struct": "I", "val": None},
-            "ressources_files_count":               {"struct": "I", "val": None},
-            "file_size":                            {"struct": "I", "val": None},
-            "ressource_files_size":                 {"struct": "I", "val": None},
-            "ressource_files_crc":                  {"struct": "I", "val": None},
-            "unknown_memory_fs_size":               {"struct": "I", "val": None},
-            "unknown_next_file_address":            {"struct": "I", "val": None},
-            "unknown_file_id":                      {"struct": "I", "val": None},
-            "unknown_metadata_size":                {"struct": "I", "val": None},
+            "old_lcd_orientation":                  {"struct": "B", "val": 0}, # editor fixes this to 0
+            "editor_version_main":                  {"struct": "B", "val": 0},
+            "editor_version_sub":                   {"struct": "B", "val": 0},
+            "editor_vendor":                        {"struct": "B", "val": 0},
+            "unknown_old_firmware_address":         {"struct": "I", "val": 0},
+            "unknwon_old_firmware_size":            {"struct": "I", "val": 0},
+            "old_lcd_resolution_width":             {"struct": "H", "val": 0}, # always largest resolution
+            "old_lcd_resolution_height":            {"struct": "H", "val": 0}, # always smallest resolution
+            "lcd_resolution_x":                     {"struct": "H", "val": 0}, # x-resolution in current orientation (cf ui_orientation)
+            "lcd_resolution_y":                     {"struct": "H", "val": 0}, # y-resolution in current orientation (cf ui_orientation)
+            "ui_orientation":                       {"struct": "B", "val": 0},
+            "model_series":                         {"struct": "B", "val": 0}, # 0=T0, 1=K0, 2=X3, 3=X5, 100=T1
+            "unknown_otp":                          {"struct": "B", "val": 0},
+            "editor_version_bugfix":                {"struct": "B", "val": 3},
+            "unknown_stm32_lcddriver_address":      {"struct": "I", "val": 0},
+            "unknown_res1":                         {"struct": "H", "val": 0},
+            "unknown_old_stm32_lcddriver_address":  {"struct": "I", "val": 0},
+            "unknown_stm32_lcddriver_size":         {"struct": "I", "val": 0},
+            "unknown_stm32_binary_address":         {"struct": "I", "val": 0},
+            "unknown_stm32_binary_size":            {"struct": "I", "val": 0},
+            "model_crc":                            {"struct": "I", "val": 0},
+            "file_version":                         {"struct": "B", "val": 0},
+            "unknown_encode_start":                 {"struct": "B", "val": 0},
+            "ressources_files_address":             {"struct": "I", "val": 0},
+            "ressources_files_count":               {"struct": "I", "val": 0},
+            "file_size":                            {"struct": "I", "val": 0},
+            "ressource_files_size":                 {"struct": "I", "val": 0},
+            "ressource_files_crc":                  {"struct": "I", "val": 0},
+            "unknown_memory_fs_size":               {"struct": "I", "val": 0},
+            "unknown_next_file_address":            {"struct": "I", "val": 0},
+            "unknown_file_id":                      {"struct": "I", "val": 0},
+            "unknown_metadata_size":                {"struct": "I", "val": 0},
         },
     }
     _fileHeader2 = {
@@ -1143,35 +1143,35 @@ class TFTFile:
         "start":   0xc8,
         "hasCRC":  True,
         "content": {
-            "static_usercode_address":      {"struct": "I", "val": None},
-            "unknown_app_vas_address":      {"struct": "I", "val": None},
-            "unknown_app_vas_count":        {"struct": "I", "val": None},
-            "app_attributes_data_address":  {"struct": "I", "val": None},
-            "ressources_files_address":     {"struct": "I", "val": None},
-            "usercode_address":             {"struct": "I", "val": None},
-            "unknown_pages_address":        {"struct": "I", "val": None},
-            "unknown_objects_address":      {"struct": "I", "val": None},
-            "pictures_address":             {"struct": "I", "val": None},
-            "gmovs_address":                {"struct": "I", "val": None},
-            "videos_address":               {"struct": "I", "val": None},
-            "audios_address":               {"struct": "I", "val": None},
-            "fonts_address":                {"struct": "I", "val": None},
-            "unknown_maincode_binary":      {"struct": "I", "val": None},
-            "pages_count":                  {"struct": "H", "val": None},
-            "unknown_objects_count":        {"struct": "H", "val": None},
-            "pictures_count":               {"struct": "H", "val": None},
-            "gmovs_count":                  {"struct": "H", "val": None},
-            "videos_count":                 {"struct": "H", "val": None},
-            "audios_count":                 {"struct": "H", "val": None},
-            "fonts_count":                  {"struct": "H", "val": None},
-            "unknown_res1":                 {"struct": "H", "val": None},
-            "unknown_encode":               {"struct": "B", "val": None},
-            "unknown_res2":                 {"struct": "B", "val": None},
-            "unknown_res3":                 {"struct": "H", "val": None},
+            "static_usercode_address":      {"struct": "I", "val": 0},
+            "unknown_app_vas_address":      {"struct": "I", "val": 0},
+            "unknown_app_vas_count":        {"struct": "I", "val": 0},
+            "app_attributes_data_address":  {"struct": "I", "val": 0},
+            "ressources_files_address":     {"struct": "I", "val": 0},
+            "usercode_address":             {"struct": "I", "val": 0},
+            "unknown_pages_address":        {"struct": "I", "val": 0},
+            "unknown_objects_address":      {"struct": "I", "val": 0},
+            "pictures_address":             {"struct": "I", "val": 0},
+            "gmovs_address":                {"struct": "I", "val": 0},
+            "videos_address":               {"struct": "I", "val": 0},
+            "audios_address":               {"struct": "I", "val": 0},
+            "fonts_address":                {"struct": "I", "val": 0},
+            "unknown_maincode_binary":      {"struct": "I", "val": 0},
+            "pages_count":                  {"struct": "H", "val": 0},
+            "unknown_objects_count":        {"struct": "H", "val": 0},
+            "pictures_count":               {"struct": "H", "val": 0},
+            "gmovs_count":                  {"struct": "H", "val": 0},
+            "videos_count":                 {"struct": "H", "val": 0},
+            "audios_count":                 {"struct": "H", "val": 0},
+            "fonts_count":                  {"struct": "H", "val": 0},
+            "unknown_res1":                 {"struct": "H", "val": 0},
+            "unknown_encode":               {"struct": "B", "val": 0},
+            "unknown_res2":                 {"struct": "B", "val": 0},
+            "unknown_res3":                 {"struct": "H", "val": 0},
         },
     }
 
-    def __init__(self, raw:bytes, hexVals=True, header2_hint:str=""):
+    def __init__(self, raw:bytes, hexVals=True, header2_hint:str="", decode_usercode=True):
         self.raw = raw
         self.hexVals = hexVals
         self.header1 = HeaderData(self.raw, self._fileHeader1)
@@ -1182,11 +1182,16 @@ class TFTFile:
         decode_hint = 0
         if self.model in self._modelXORs:
             decode_hint = self._modelXORs[self.model]
-        if not decode_hint:
+        if header2_hint:
             decode_hint = header2_hint
         self.header2 = HeaderData(self.raw, self._fileHeader2, decode_hint)
 
-        # Decode Usercode:
+        # Decode Usercode if requested
+        self.usercode = None
+        if decode_usercode:
+            self.decode_usercode(hexVals=hexVals)
+
+    def decode_usercode(self, hexVals=True):
         self.usercode = Usercode(self._getVal("model_series"), self.getRawUsercode(), hexVals)
 
     def getRawBootloader(self):
