@@ -967,15 +967,9 @@ class HeaderData:
         self.key = bytes(len(raw))
         self.encrypted = False
         if type(decode_hint) is int:
-            if decode_hint:
-                self.encrypted = True
-                if type(decode_hint) is int:
-                    self.key = struct.pack("<I", decode_hint)
-                    self.key = self.key * (self.size // len(self.key) + 1)
-                else:
-                    self.key = decode_hint
-                # only decode the part that actually contains encoded data. Copy the rest as-is.
-                data = bytes([b ^ self.key[i] for i, b in enumerate(data[:self._contentSize])]) + data[self._contentSize:]
+            self.set_key(decode_hint)
+            # only decode the part that actually contains encoded data. Copy the rest as-is.
+            data = bytes([b ^ self.key[i] for i, b in enumerate(data[:self._contentSize])]) + data[self._contentSize:]
             data = struct.unpack(fullStruct, data)
             for i, k in enumerate(self.content.keys()):
                 self.content[k] = data[i]
@@ -1018,6 +1012,23 @@ class HeaderData:
             # even though we don't use or need the actual raw version of the header.
             self.getRaw()
 
+    def set_key(self, key):
+        if type(key) is int:
+            if key:
+                self.encrypted = True
+            else:
+                self.encrypted = False
+            self.key = struct.pack("<I", key)
+            self.key = self.key * (self.size // len(self.key) + 1)
+        elif type(key) in (bytes, bytearray):
+            self.encrypted = False
+            for b in key:
+                if b:
+                    self.encrypted = True
+                    break
+            self.key = key
+        else:
+            raise Exception(f"Key has unknown type: {key} (type: {type(key)})")
 
     def getRaw(self):
         raw = struct.pack(self._contentStruct, *self.content.values())
@@ -1292,8 +1303,10 @@ class TFTFile:
         self.model = model
         self.header1.content["editor_vendor"] = ord(model[0])
         self.header1.content["model_crc"] = self._modelCRCs[self._models.index(model)]
-        self.header2.xor = self._modelXORs[model]
+        self.header2.set_key(self._modelXORs[model])
+        self.update_raw()
 
+    def update_raw(self):
         # Convert modified headers back to raw, which also updates the header checksums
         raw  = self.header1.getRaw()
         raw += self.header2.getRaw()
@@ -1339,6 +1352,12 @@ if __name__ == '__main__':
                              "original file name. Use -t LIST to list all available models. Use -t NXT or -t TJC "
                              "to keep the original model but change the vendor. Note that this does not work for the "
                              "X3, X5 and P series.")
+    parser.add_argument("-e", "--editor-version", default="",
+                        help="Optional parameter to specify a new editor version. This is useful if you want to run "
+                             "an existing file in a different editor version or migrate between Nextion and TJC where "
+                             "the same editor can have a different version number (f.ex. TJC 1.63.1 equals NXT 1.63.3) "
+                             "CAREFUL! There is no guarantee that the file still works properly in the new editor "
+                             "version. Format: '1.23.4' (three integers separated by a dot).")
     parser.add_argument("--header2", default="",
                         help="Optional parameter to provide the decoded header 2 for T1/Discovery series files. Can "
                              "either be a string with a json (see TFTTool source for the parameters and their names "
@@ -1404,6 +1423,16 @@ if __name__ == '__main__':
             args.target += "_011"
 
         tft.setModel(args.target, args.force)
+
+        if args.editor_version:
+            try:
+                v_main, v_sub, v_bug = [int(v) for v in args.editor_version.split(".")]
+            except ValueError:
+                parser.error(f"Invald version string: {args.editor_version}")
+            tft.header1.content["editor_version_main"] = v_main
+            tft.header1.content["editor_version_sub"] = v_sub
+            tft.header1.content["editor_version_bugfix"] = v_bug
+            tft.update_raw()
 
         if not outputPath or outputPath == tftPath:
             outputPath = tftPath.with_stem(tftPath.stem + "_" + args.target)
