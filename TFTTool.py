@@ -1004,7 +1004,16 @@ class HeaderData:
                     # Skip all unknown keys.
                     for k, v in data.items():
                         if k in self.content:
-                            self.content[k] = v
+                            if type(v) is int:
+                                self.content[k] = v
+                            else:
+                                try:
+                                    self.content[k] = int(v, 16)
+                                except:
+                                    try:
+                                        self.content[k] = int(v, 2)
+                                    except:
+                                        self.content[k] = int(v)
 
             # Update CRC. This requires serializing the data. Both things are done by getRaw
             # even though we don't use or need the actual raw version of the header.
