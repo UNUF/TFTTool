@@ -802,7 +802,7 @@ class Usercode:
                 nostrings = b"".join([chr(c).encode() for i, c in enumerate(self.raw) if i not in stringRegions])
                 # Search for commands
                 for op in self._unaryOperators:
-                    if op.encode("ascii") in self.raw:
+                    if op.encode("ascii") in nostrings:
                         operation = True
                         break
                 if not operation:
