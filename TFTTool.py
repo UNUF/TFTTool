@@ -14,6 +14,7 @@ import string
 import argparse
 from pathlib import Path
 from NextionChecksum import Checksum
+from NextionInstructionSets import all_instruction_sets
 
 # Disable traceback for Nuitka compiling
 if not __debug__:
@@ -37,722 +38,10 @@ class Usercode:
             "system:": 0x04,
             "":        0x03, #actual value
         }
+        _operandTypesDecode = {v: k for k, v in _operandTypesEncode.items()}
 
-        # Most encodings differ for each model series.
-        _listOperatorsEncode = {
-            # T0/Basic
-            0: {
-                "jmp":      0x2054,
-                "cjmp":     0x400,
-                "pic":      0x401,
-                "cle":      0x402,
-                "ref":      0x403,
-                "cir":      0x404,
-                "vis":      0x405,
-                "cls":      0x406,
-                "get":      0x407,
-                "cov":      0x408,
-                "tsw":      0x409,
-                "xpic":     0x40a,
-                "page":     0x40b,
-                "line":     0x40c,
-                "fill":     0x40d,
-                "pa_q":     0x40e,
-                "picq":     0x40f,
-                "fstr":     0x410,
-                "nstr":     0x411,
-                "xstr":     0x412,
-                "zstr":     0x413,
-                "cirs":     0x414,
-                "addt":     0x415,
-                "init":     0x416,
-                "rfpt":     0x417,
-                "wfpt":     0x418,
-                "rest":     0x419,
-                "draw":     0x41a,
-                "covx":     0x41b,
-                "click":    0x800,
-                "comok":    0x801,
-                "btlen":    0x802,
-                "spstr":    0x803,
-                "print":    0x804,
-                "ucopy":    0x805,
-                "code_c":   0x806,
-                "draw3d":   0x807,
-                "qrcode":   0x808,
-                "sendme":   0x809,
-                "draw_h":   0x80a,
-                "printh":   0x80b,
-                "strlen":   0x80c,
-                "showqq":   0x80d,
-                "substr":   0x80e,
-                "prints":   0x80f,
-                "pa_txt":   0x810,
-                "udelete":  0x811,
-                "strsize":  0x812,
-                "crcputh":  0x813,
-                "touch_j":  0x814,
-                "crcputs":  0x815,
-                "randset":  0x816,
-                "crcrest":  0x817,
-                "crcputu":  0x818,
-                "lcd_dev":  0x819,
-                "lhmi_cle": 0x81a,
-                "whmi_cle": 0x81b,
-                "setbrush": 0x81c,
-                "ref_stop": 0x81d,
-                "com_stop": 0x81e,
-                "ref_star": 0x81f,
-                "com_star": 0x820,
-                "doevents": 0x821,
-                "timerset": 0x822,
-                "getpassw": 0x823,
-                "lcd_refx": 0x824,
-                "setbaudz": 0x825,
-            },
-            # K0/Enhanced
-            1: {
-                "jmp":      0x2054,
-                "cjmp":     0x400,
-                "pic":      0x401,
-                "cle":      0x402,
-                "ref":      0x403,
-                "cir":      0x404,
-                "vis":      0x405,
-                "cls":      0x406,
-                "get":      0x407,
-                "cov":      0x408,
-                "tsw":      0x409,
-                "xpic":     0x40a,
-                "page":     0x40b,
-                "line":     0x40c,
-                "fill":     0x40d,
-                "repo":     0x40e,
-                "wepo":     0x40f,
-                "pa_q":     0x410,
-                "picq":     0x411,
-                "fstr":     0x412,
-                "nstr":     0x413,
-                "xstr":     0x414,
-                "zstr":     0x415,
-                "cirs":     0x416,
-                "addt":     0x417,
-                "init":     0x418,
-                "rept":     0x419,
-                "wept":     0x41a,
-                "rfpt":     0x41b,
-                "wfpt":     0x41c,
-                "rest":     0x41d,
-                "draw":     0x41e,
-                "covx":     0x41f,
-                "click":    0x800,
-                "comok":    0x801,
-                "btlen":    0x802,
-                "spstr":    0x803,
-                "print":    0x804,
-                "ucopy":    0x805,
-                "code_c":   0x806,
-                "draw3d":   0x807,
-                "qrcode":   0x808,
-                "sendme":   0x809,
-                "draw_h":   0x80a,
-                "printh":   0x80b,
-                "strlen":   0x80c,
-                "cfgpio":   0x80d,
-                "showqq":   0x80e,
-                "substr":   0x80f,
-                "prints":   0x810,
-                "pa_txt":   0x811,
-                "udelete":  0x812,
-                "strsize":  0x813,
-                "crcputh":  0x814,
-                "touch_j":  0x815,
-                "crcputs":  0x816,
-                "randset":  0x817,
-                "crcrest":  0x818,
-                "crcputu":  0x819,
-                "lcd_dev":  0x81a,
-                "lhmi_cle": 0x81b,
-                "whmi_cle": 0x81c,
-                "setbrush": 0x81d,
-                "ref_stop": 0x81e,
-                "com_stop": 0x81f,
-                "ref_star": 0x820,
-                "com_star": 0x821,
-                "doevents": 0x822,
-                "timerset": 0x823,
-                "getpassw": 0x824,
-                "lcd_refx": 0x825,
-                "setbaudz": 0x826,
-            },
-            # X3/-
-            2: {
-                "jmp":      0x2054,
-                "cjmp":     0x400,
-                "pic":      0x401,
-                "cle":      0x402,
-                "ref":      0x403,
-                "cir":      0x404,
-                "vis":      0x405,
-                "cls":      0x406,
-                "get":      0x407,
-                "cov":      0x408,
-                "tsw":      0x409,
-                "xpic":     0x40a,
-                "page":     0x40b,
-                "line":     0x40c,
-                "move":     0x40d,
-                "fill":     0x40e,
-                "repo":     0x40f,
-                "wepo":     0x410,
-                "pa_q":     0x411,
-                "picq":     0x412,
-                "nstr":     0x413,
-                "xstr":     0x414,
-                "zstr":     0x415,
-                "cirs":     0x416,
-                "addt":     0x417,
-                "init":     0x418,
-                "rept":     0x419,
-                "wept":     0x41a,
-                "rfpt":     0x41b,
-                "wfpt":     0x41c,
-                "rest":     0x41d,
-                "draw":     0x41e,
-                "covx":     0x41f,
-                "play":     0x420,
-                "click":    0x800,
-                "comok":    0x801,
-                "btlen":    0x802,
-                "redir":    0x803,
-                "spstr":    0x804,
-                "print":    0x805,
-                "ucopy":    0x806,
-                "code_c":   0x807,
-                "draw3d":   0x808,
-                "qrcode":   0x809,
-                "rdfile":   0x80a,
-                "refile":   0x80b,
-                "twfile":   0x80c,
-                "sendme":   0x80d,
-                "draw_h":   0x80e,
-                "printh":   0x80f,
-                "strlen":   0x810,
-                "cfgpio":   0x811,
-                "showqq":   0x812,
-                "deldir":   0x813,
-                "newdir":   0x814,
-                "substr":   0x815,
-                "prints":   0x816,
-                "pa_txt":   0x817,
-                "delfile":  0x818,
-                "newfile":  0x819,
-                "udelete":  0x81a,
-                "strsize":  0x81b,
-                "crcputh":  0x81c,
-                "touch_j":  0x81d,
-                "finddir":  0x81e,
-                "crcputs":  0x81f,
-                "randset":  0x820,
-                "crcrest":  0x821,
-                "crcputu":  0x822,
-                "lcd_dev":  0x823,
-                "lhmi_cle": 0x824,
-                "whmi_cle": 0x825,
-                "findfile": 0x826,
-                "setbrush": 0x827,
-                "ref_stop": 0x828,
-                "com_stop": 0x829,
-                "ref_star": 0x82a,
-                "com_star": 0x82b,
-                "setlayer": 0x82c,
-                "doevents": 0x82d,
-                "timerset": 0x82e,
-                "getpassw": 0x82f,
-                "lcd_refx": 0x830,
-                "setbaudz": 0x831,
-            },
-           # X5/Intelligent
-           3: {
-                "jmp":      0x2054,
-                "cjmp":     0x400,
-                "pic":      0x401,
-                "cle":      0x402,
-                "ref":      0x403,
-                "cir":      0x404,
-                "vis":      0x405,
-                "cls":      0x406,
-                "get":      0x407,
-                "cov":      0x408,
-                "tsw":      0x409,
-                "xpic":     0x40a,
-                "page":     0x40b,
-                "line":     0x40c,
-                "move":     0x40d,
-                "fill":     0x40e,
-                "xnum":     0x40f,
-                "repo":     0x410,
-                "wepo":     0x411,
-                "pa_q":     0x412,
-                "picq":     0x413,
-                "nstr":     0x414,
-                "xstr":     0x415,
-                "zstr":     0x416,
-                "cirs":     0x417,
-                "cuts":     0x418,
-                "addt":     0x419,
-                "init":     0x41a,
-                "rept":     0x41b,
-                "wept":     0x41c,
-                "rfpt":     0x41d,
-                "wfpt":     0x41e,
-                "rest":     0x41f,
-                "draw":     0x420,
-                "covx":     0x421,
-                "play":     0x422,
-                "click":    0x800,
-                "comok":    0x801,
-                "btlen":    0x802,
-                "redir":    0x803,
-                "spstr":    0x804,
-                "print":    0x805,
-                "ucopy":    0x806,
-                "code_c":   0x807,
-                "draw3d":   0x808,
-                "qrcode":   0x809,
-                "rdfile":   0x80a,
-                "refile":   0x80b,
-                "twfile":   0x80c,
-                "sendme":   0x80d,
-                "draw_h":   0x80e,
-                "printh":   0x80f,
-                "strlen":   0x810,
-                "cfgpio":   0x811,
-                "showqq":   0x812,
-                "deldir":   0x813,
-                "newdir":   0x814,
-                "substr":   0x815,
-                "prints":   0x816,
-                "pa_txt":   0x817,
-                "delfile":  0x818,
-                "newfile":  0x819,
-                "udelete":  0x81a,
-                "strsize":  0x81b,
-                "crcputh":  0x81c,
-                "touch_j":  0x81d,
-                "finddir":  0x81e,
-                "crcputs":  0x81f,
-                "randset":  0x820,
-                "cfguart":  0x821,
-                "crcrest":  0x822,
-                "crcputu":  0x823,
-                "lcd_dev":  0x824,
-                "lhmi_cle": 0x825,
-                "whmi_cle": 0x826,
-                "findfile": 0x827,
-                "setbrush": 0x828,
-                "ref_stop": 0x829,
-                "com_stop": 0x82a,
-                "ref_star": 0x82b,
-                "com_star": 0x82c,
-                "setlayer": 0x82d,
-                "doevents": 0x82e,
-                "timerset": 0x82f,
-                "getpassw": 0x830,
-                "lcd_refx": 0x831,
-                "setbaudz": 0x832,
-           },
-            # T1/Discovery
-            100: {
-                "jmp":      0x2054,
-                "cjmp":     0x400,
-                "pic":      0x401,
-                "cle":      0x402,
-                "ref":      0x403,
-                "cir":      0x404,
-                "vis":      0x405,
-                "cls":      0x406,
-                "get":      0x407,
-                "cov":      0x408,
-                "tsw":      0x409,
-                "xpic":     0x40a,
-                "page":     0x40b,
-                "line":     0x40c,
-                "fill":     0x40d,
-                "repo":     0x40e,
-                "wepo":     0x40f,
-                "pa_q":     0x410,
-                "picq":     0x411,
-                "fstr":     0x412,
-                "nstr":     0x413,
-                "xstr":     0x414,
-                "zstr":     0x415,
-                "cirs":     0x416,
-                "addt":     0x417,
-                "init":     0x418,
-                "rfpt":     0x419,
-                "wfpt":     0x41a,
-                "rest":     0x41b,
-                "getv":     0x41c,
-                "draw":     0x41d,
-                "covx":     0x41e,
-                "click":    0x800,
-                "comok":    0x801,
-                "btlen":    0x802,
-                "spstr":    0x803,
-                "print":    0x804,
-                "ucopy":    0x805,
-                "code_c":   0x806,
-                "draw3d":   0x807,
-                "qrcode":   0x808,
-                "sendme":   0x809,
-                "draw_h":   0x80a,
-                "printh":   0x80b,
-                "strlen":   0x80c,
-                "showqq":   0x80d,
-                "substr":   0x80e,
-                "prints":   0x80f,
-                "pa_txt":   0x810,
-                "udelete":  0x811,
-                "strsize":  0x812,
-                "crcputh":  0x813,
-                "touch_j":  0x814,
-                "crcputs":  0x815,
-                "randset":  0x816,
-                "crcrest":  0x817,
-                "crcputu":  0x818,
-                "lcd_dev":  0x819,
-                "lhmi_cle": 0x81a,
-                "whmi_cle": 0x81b,
-                "setbrush": 0x81c,
-                "ref_stop": 0x81d,
-                "com_stop": 0x81e,
-                "ref_star": 0x81f,
-                "com_star": 0x820,
-                "piccolor": 0x821,
-                "doevents": 0x822,
-                "timerset": 0x823,
-                "getpassw": 0x824,
-                "lcd_refx": 0x825,
-                "setbaudz": 0x826,
-            },
-        }
-        _unaryOperators  = ["++", "--"]
-        _binaryOperators = ["+", "-", "*", "/", "<<", ">>", "&", "|"]
-        _binaryOperators.extend([c + "=" for c in _binaryOperators])
-        _binaryOperators.append("=")
-
-        _systemVariablesEncode = {
-            # T0/Basic
-            0: {
-                "dp":       0x0004,
-                "RED":      0x0104,
-                "thc":      0x0204,
-                "dim":      0x0304,
-                "wup":      0x0404,
-                "sya0":     0x0504,
-                "tch0":     0x0604,
-                "sya1":     0x0704,
-                "tch1":     0x0804,
-                "tch2":     0x0904,
-                "tch3":     0x0a04,
-                "BLUE":     0x0b04,
-                "GRAY":     0x0c04,
-                "rand":     0x0d04,
-                "baud":     0x0e04,
-                "thsp":     0x0f04,
-                "ussp":     0x1004,
-                "thup":     0x1104,
-                "usup":     0x1204,
-                "addr":     0x1304,
-                "dims":     0x1404,
-                "bcpu":     0x1504,
-                "spax":     0x1604,
-                "spay":     0x1704,
-                "WHITE":    0x0008,
-                "BLACK":    0x0108,
-                "GREEN":    0x0208,
-                "BROWN":    0x0308,
-                "thdra":    0x0408,
-                "appid":    0x0508,
-                "bkcmd":    0x0608,
-                "usize":    0x0708,
-                "sleep":    0x0808,
-                "tpdir":    0x0908,
-                "bauds":    0x0a08,
-                "delay":    0x0b08,
-                "YELLOW":   0x0c08,
-                "recmod":   0x0d08,
-                "runmod":   0x0e08,
-                "crcval":   0x0f08,
-                "sendxy":   0x1008,
-                "portbusy": 0x1108,
-            },
-            # K0/Enhanced
-            1: {
-                "dp":       0x0004,
-                "RED":      0x0104,
-                "thc":      0x0204,
-                "dim":      0x0304,
-                "wup":      0x0404,
-                "sya0":     0x0504,
-                "rtc0":     0x0604,
-                "tch0":     0x0704,
-                "pio0":     0x0804,
-                "sya1":     0x0904,
-                "rtc1":     0x0a04,
-                "tch1":     0x0b04,
-                "pio1":     0x0c04,
-                "rtc2":     0x0d04,
-                "tch2":     0x0e04,
-                "pio2":     0x0f04,
-                "rtc3":     0x1004,
-                "tch3":     0x1104,
-                "pio3":     0x1204,
-                "rtc4":     0x1304,
-                "pwm4":     0x1404,
-                "pio4":     0x1504,
-                "rtc5":     0x1604,
-                "pwm5":     0x1704,
-                "pio5":     0x1804,
-                "rtc6":     0x1904,
-                "pwm6":     0x1a04,
-                "pio6":     0x1b04,
-                "pwm7":     0x1c04,
-                "pio7":     0x1d04,
-                "BLUE":     0x0008,
-                "GRAY":     0x0108,
-                "rand":     0x0208,
-                "baud":     0x0308,
-                "pwmf":     0x0408,
-                "thsp":     0x0508,
-                "ussp":     0x0608,
-                "thup":     0x0708,
-                "usup":     0x0808,
-                "addr":     0x0908,
-                "dims":     0x0a08,
-                "bcpu":     0x0b08,
-                "spax":     0x0c08,
-                "spay":     0x0d08,
-                "WHITE":    0x0e08,
-                "BLACK":    0x0f08,
-                "GREEN":    0x1008,
-                "BROWN":    0x1108,
-                "thdra":    0x1208,
-                "appid":    0x1308,
-                "bkcmd":    0x1408,
-                "usize":    0x1508,
-                "sleep":    0x1608,
-                "tpdir":    0x1708,
-                "bauds":    0x1808,
-                "delay":    0x1908,
-                "YELLOW":   0x1a08,
-                "recmod":   0x1b08,
-                "runmod":   0x1c08,
-                "crcval":   0x1d08,
-                "sendxy":   0x1e08,
-                "portbusy": 0x1f08,
-            },
-            # X3/-
-            2: {
-                "dp":       0x0004,
-                "eq0":      0x0104,
-                "eq1":      0x0204,
-                "eq2":      0x0304,
-                "eq3":      0x0404,
-                "eq4":      0x0504,
-                "eq5":      0x0604,
-                "eq6":      0x0704,
-                "eq7":      0x0804,
-                "eq8":      0x0904,
-                "eq9":      0x0a04,
-                "RED":      0x0b04,
-                "thc":      0x0c04,
-                "aph":      0x0d04,
-                "eqh":      0x0e04,
-                "eql":      0x0f04,
-                "dim":      0x1004,
-                "eqm":      0x1104,
-                "wup":      0x1204,
-                "sya0":     0x1304,
-                "tch0":     0x1404,
-                "sya1":     0x1504,
-                "tch1":     0x1604,
-                "tch2":     0x1704,
-                "tch3":     0x1804,
-                "BLUE":     0x1904,
-                "GRAY":     0x1a04,
-                "tprc":     0x1b04,
-                "rand":     0x1c04,
-                "baud":     0x1d04,
-                "thsp":     0x1e04,
-                "ussp":     0x1f04,
-                "thup":     0x2004,
-                "usup":     0x2104,
-                "addr":     0x2204,
-                "dims":     0x2304,
-                "bcpu":     0x2404,
-                "spax":     0x2504,
-                "spay":     0x2604,
-                "WHITE":    0x0008,
-                "BLACK":    0x0108,
-                "GREEN":    0x0208,
-                "BROWN":    0x0308,
-                "thdra":    0x0408,
-                "appid":    0x0508,
-                "bkcmd":    0x0608,
-                "usize":    0x0708,
-                "sleep":    0x0808,
-                "tpdir":    0x0908,
-                "bauds":    0x0a08,
-                "delay":    0x0b08,
-                "audio0":   0x0c08,
-                "audio1":   0x0d08,
-                "YELLOW":   0x0e08,
-                "recmod":   0x0f08,
-                "runmod":   0x1008,
-                "volume":   0x1108,
-                "crcval":   0x1208,
-                "sendxy":   0x1308,
-                "portbusy": 0x1408,
-            },
-            # X5/Intelligent
-            3: {
-                "dp":       0x0004,
-                "eq0":      0x0104,
-                "eq1":      0x0204,
-                "eq2":      0x0304,
-                "eq3":      0x0404,
-                "eq4":      0x0504,
-                "eq5":      0x0604,
-                "eq6":      0x0704,
-                "eq7":      0x0804,
-                "eq8":      0x0904,
-                "eq9":      0x0a04,
-                "RED":      0x0b04,
-                "thc":      0x0c04,
-                "aph":      0x0d04,
-                "eqh":      0x0e04,
-                "eql":      0x0f04,
-                "dim":      0x1004,
-                "eqm":      0x1104,
-                "wup":      0x1204,
-                "sya0":     0x1304,
-                "rtc0":     0x1404,
-                "tch0":     0x1504,
-                "pio0":     0x1604,
-                "sya1":     0x1704,
-                "rtc1":     0x1804,
-                "tch1":     0x1904,
-                "pio1":     0x1a04,
-                "rtc2":     0x1b04,
-                "tch2":     0x1c04,
-                "pio2":     0x1d04,
-                "rtc3":     0x1e04,
-                "tch3":     0x1f04,
-                "pio3":     0x2004,
-                "rtc4":     0x2104,
-                "pwm4":     0x2204,
-                "pio4":     0x2304,
-                "rtc5":     0x2404,
-                "pwm5":     0x2504,
-                "pio5":     0x2604,
-                "rtc6":     0x2704,
-                "pwm6":     0x2804,
-                "pio6":     0x2904,
-                "pwm7":     0x2a04,
-                "pio7":     0x2b04,
-                "BLUE":     0x2c04,
-                "GRAY":     0x2d04,
-                "tprc":     0x2e04,
-                "rand":     0x2f04,
-                "baud":     0x3004,
-                "pwmf":     0x3104,
-                "thsp":     0x3204,
-                "ussp":     0x3304,
-                "thup":     0x3404,
-                "usup":     0x3504,
-                "addr":     0x3604,
-                "dims":     0x3704,
-                "bcpu":     0x3804,
-                "spax":     0x3904,
-                "spay":     0x3a04,
-                "WHITE":    0x0008,
-                "BLACK":    0x0108,
-                "GREEN":    0x0208,
-                "BROWN":    0x0308,
-                "thdra":    0x0408,
-                "appid":    0x0508,
-                "bkcmd":    0x0608,
-                "usize":    0x0708,
-                "sleep":    0x0808,
-                "tpdir":    0x0908,
-                "bauds":    0x0a08,
-                "delay":    0x0b08,
-                "audio0":   0x0c08,
-                "audio1":   0x0d08,
-                "YELLOW":   0x0e08,
-                "recmod":   0x0f08,
-                "runmod":   0x1008,
-                "scache":   0x1108,
-                "volume":   0x1208,
-                "crcval":   0x1308,
-                "sendxy":   0x1408,
-                "portbusy": 0x1508,
-            },
-            # T1/Discovery
-            100: {
-                "dp":       0x0004,
-                "RED":      0x0104,
-                "thc":      0x0204,
-                "dim":      0x0304,
-                "wup":      0x0404,
-                "sya0":     0x0504,
-                "tch0":     0x0604,
-                "sya1":     0x0704,
-                "tch1":     0x0804,
-                "tch2":     0x0904,
-                "tch3":     0x0a04,
-                "BLUE":     0x0b04,
-                "GRAY":     0x0c04,
-                "rand":     0x0d04,
-                "baud":     0x0e04,
-                "thsp":     0x0f04,
-                "ussp":     0x1004,
-                "thup":     0x1104,
-                "usup":     0x1204,
-                "addr":     0x1304,
-                "dims":     0x1404,
-                "bcpu":     0x1504,
-                "spax":     0x1604,
-                "spay":     0x1704,
-                "WHITE":    0x0008,
-                "BLACK":    0x0108,
-                "GREEN":    0x0208,
-                "BROWN":    0x0308,
-                "thdra":    0x0408,
-                "appid":    0x0508,
-                "bkcmd":    0x0608,
-                "usize":    0x0708,
-                "sleep":    0x0808,
-                "tpdir":    0x0908,
-                "bauds":    0x0a08,
-                "delay":    0x0b08,
-                "YELLOW":   0x0c08,
-                "recmod":   0x0d08,
-                "runmod":   0x0e08,
-                "crcval":   0x0f08,
-                "sendxy":   0x1008,
-                "lowpower": 0x1108,
-                "portbusy": 0x1208,
-            },
-        }
-        _operandTypesDecode   = {v: k for k, v in _operandTypesEncode.items()}
-        _listOperatorsDecode    = {type: {v: k for k, v in ops.items()} for type, ops in _listOperatorsEncode.items()}
-        _systemVariablesDecode = {type: {v: k for k, v in sysvars.items()} for type, sysvars in _systemVariablesEncode.items()}
-
-        def __init__(self, model_series:int, rawBlock:bytes, hexVals=True, globalVars=dict(), localVars=dict()):
-            self.series = model_series
+        def __init__(self, instruction_set:dict, rawBlock:bytes, hexVals=True, globalVars=dict(), localVars=dict()):
+            self.instruction_set = instruction_set
             self.raw = rawBlock
             self._asHex = hexVals
             self._globalVars = globalVars
@@ -805,56 +94,57 @@ class Usercode:
                             escActive = False
                 nostrings = b"".join([chr(c).encode() for i, c in enumerate(self.raw) if i not in stringRegions])
                 # Search for commands
-                for op in self._unaryOperators:
+                for op in self.instruction_set["other_operators"]["unary"]:
                     if op.encode("ascii") in nostrings:
                         operation = True
                         break
                 if not operation:
-                    for op in self._binaryOperators:
+                    for op in self.instruction_set["other_operators"]["binary"]:
                         if op.encode("ascii") in nostrings:
                             operation = True
                             break
                 if not operation:
-                    starts = (b"\x09", struct.pack("<H", self._listOperatorsEncode[self.series]["jmp"]))
-                    for s in starts:
-                        if self.raw.startswith(s):
-                            l = len(s)
-                            if l < 2:
-                                if len(self.raw) == 3:
-                                    operation = True
-                                    break
-                                else:
-                                    l += 2
-                            if l < len(self.raw):
-                                c = self.raw[l]
-                                if c in self._operandTypesDecode.keys() or chr(c) in string.printable:
-                                    operation = True
-                                    break
+                    jmp = struct.pack("<H", self.instruction_set["other_operators"]["jmp"])
+                    if nostrings.startswith(jmp):
+                        operation = True
+                        skip += len(jmp)
+                        self.decoded += "jmp"
+
+                if not operation:
+                    if self.raw.startswith(b"\x09"):
+                        l = 1
+                        if len(self.raw) == 3:
+                            operation = True
+                        else:
+                            l += 2
+                        if l < len(self.raw):
+                            c = self.raw[l]
+                            if c in self._operandTypesDecode.keys() or chr(c) in string.printable:
+                                operation = True
 
                 if operation:
+                    decoded = False
                     for i, b in enumerate(self.raw):
                         if skip:
                             skip -= 1
                             continue
                         if i not in stringRegions:
                             replaced = True
-                            if b == 0x09 or (b == 0x20 and self.raw[i-1] == 0x54): # jmp is extra...
+                            if b == 0x09:
                                 localI = i
-                                dataStruct = "<H"
-                                if b == 0x09:
-                                    localI += 1
-                                    skip = struct.calcsize(dataStruct)
-                                else:
-                                    # jmp. We need to remove the first byte of the command from the decode string
-                                    self.decoded = self.decoded[:-1]
-                                    localI -= 1
-                                op = struct.unpack_from(dataStruct, self.raw, localI)[0]
-                                if op in self._listOperatorsDecode[self.series]:
-                                    self.decoded += self._listOperatorsDecode[self.series][op]
-                                else:
-                                    self.decoded += "op:" + self._hexOrNot(op)
-
-                                self.decoded += " "
+                                dataStruct = "BB"
+                                localI += 1
+                                skip = struct.calcsize(dataStruct)
+                                op_num, op_size = struct.unpack_from(dataStruct, self.raw, localI)
+                                if op_size in self.instruction_set["numerated_operators"]:
+                                    op_list = self.instruction_set["numerated_operators"][op_size]
+                                    if op_num < len(op_list):
+                                        self.decoded += op_list[op_num]
+                                        decoded = True
+                                if not decoded:
+                                    self.decoded += f"op:{op_size}:{self._hexOrNot(op_num)}"
+                                if i < len(self.raw) - 1:
+                                    self.decoded += " "
                             elif b in self._operandTypesDecode:
                                 dataStruct = "<I"
                                 skip = struct.calcsize(dataStruct)
@@ -863,10 +153,19 @@ class Usercode:
                                     varLookup = dict()
                                     if b == 1: #local variable
                                         varLookup = self._localVars
-                                    elif b== 5: #global variable
+                                    elif b == 5: #global variable
                                         varLookup = self._globalVars
                                     elif b == 4: #system variable
-                                        varLookup = self._systemVariablesDecode[self.series]
+                                        # System vars are not 4 byte pointers like local or global vars.
+                                        # The lowest byte actually encodes the "class" of the variable.
+                                        # Similar to the operator decoding.
+                                        sysvar_size = val & 0xff
+                                        val >>= 8
+                                        if sysvar_size in self.instruction_set["numerated_system_variables"]:
+                                            sysvars = self.instruction_set["numerated_system_variables"][sysvar_size]
+                                            # TODO not the cleanest solution
+                                            if val < len(sysvars):
+                                                varLookup = {val: sysvars[val]}
                                     if val not in varLookup:
                                         self.decoded += self._operandTypesDecode[b] + self._hexOrNot(val)
                                     else:
@@ -911,8 +210,8 @@ class Usercode:
             else:
                 return hexStr(self.raw)
 
-    def __init__(self, model_series:int, rawUsercode:bytes, hexVals=True):
-        self.series = model_series
+    def __init__(self, instruction_set:int, rawUsercode:bytes, hexVals=True):
+        self.instruction_set = instruction_set
         self.raw = rawUsercode
         nextBlock = 0
         #self.rawGlobalMem, nextBlock = self._getRawBlock(nextBlock)
@@ -921,7 +220,7 @@ class Usercode:
         while nextBlock <= len(self.raw) - 4:
             currentBlock = nextBlock
             raw, nextBlock = self._getRawBlock(currentBlock)
-            self.blocks[currentBlock] = self.CodeBlock(model_series, raw)
+            self.blocks[currentBlock] = self.CodeBlock(self.instruction_set, raw)
         #self.pages = dict()
         #for i in range(0, len(self.rawPageList), 6):
         #    value = self.rawPageList[i+0:i+4]
@@ -1172,8 +471,8 @@ class TFTFile:
         "hasCRC":  True,
         "content": {
             "static_usercode_address":      {"struct": "I", "val": 0},
-            "unknown_app_vas_address":      {"struct": "I", "val": 0},
-            "unknown_app_vas_count":        {"struct": "I", "val": 0},
+#            "unknown_app_vas_address":      {"struct": "I", "val": 0},
+#            "unknown_app_vas_count":        {"struct": "I", "val": 0},
             "app_attributes_data_address":  {"struct": "I", "val": 0},
             "ressources_files_address":     {"struct": "I", "val": 0},
             "usercode_address":             {"struct": "I", "val": 0},
@@ -1214,13 +513,36 @@ class TFTFile:
             decode_hint = header2_hint
         self.header2 = HeaderData(self.raw, self._fileHeader2, decode_hint)
 
+        # Determine correct instruction set based on editor and model series
+        version_str = self.getEditorVersionStr()
+        self.instructions = None
+        for e in all_instruction_sets:
+            if version_str in e["versions"]:
+                self.instructions = e["models"][self._getVal("model_series")]
+                break
+        if not self.instructions:
+            print(f"Warning: No instruction set found that matches editor version {version_str}. "
+                  f"You won't be able to decode any usercode. ")
+
         # Decode Usercode if requested
         self.usercode = None
         if decode_usercode:
             self.decode_usercode(hexVals=hexVals)
 
+    def getEditorVersionStr(self):
+        vendor = {ord("T"): "tjc", ord("N"): "nxt"}[self._getVal("editor_vendor")]
+        main   = self._getVal("editor_version_main")
+        sub    = self._getVal("editor_version_sub")
+        bug    = self._getVal("editor_version_bugfix")
+        editor_str = f"{vendor}-{main}.{sub}"
+        if main: # 0.xx versions didn't have bugfix numbers
+            editor_str = editor_str + f".{bug}"
+        return editor_str
+
     def decode_usercode(self, hexVals=True):
-        self.usercode = Usercode(self._getVal("model_series"), self.getRawUsercode(), hexVals)
+        if not self.instructions:
+            raise Exception("A valid instruction set is required to decode the usercode. ")
+        self.usercode = Usercode(self.instructions, self.getRawUsercode(), hexVals)
 
     def getRawBootloader(self):
         start = self._getVal("ressources_files_address")
