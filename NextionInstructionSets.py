@@ -321,7 +321,7 @@ all_instruction_sets = [
     },
     {
         'versions': [
-            'nxt-1.63.1', 'nxt-1.63.2', 'nxt-1.63.3',
+            'nxt-1.61.1', 'nxt-1.63.1', 'nxt-1.63.2', 'nxt-1.63.3', 'nxt-1.65.1',
         ],
         'models': {
             0: {
